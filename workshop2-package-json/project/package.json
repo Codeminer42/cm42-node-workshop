@@ -1,0 +1,16 @@
+{
+  "name": "workshop_npm",
+  "version": "1.0.0",
+  "description": "Packages study",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.16",
+    "new_package": "file:../example-package" 
+  }
+}
