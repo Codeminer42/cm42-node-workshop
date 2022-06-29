@@ -1,0 +1,11 @@
+{
+  "name": "workshop006-websockets",
+  "version": "1.0.0",
+  "description": "Simple chat with socket.io",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,72 @@
+*{
+  box-sizing: border-box;
+}
+
+.App {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+#modal {
+  display: flex;
+  flex-direction: column;
+  background-color: #bfc6d1;
+  height: 60vh;
+  width: 60vh;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+}
+
+#chat {
+  display: flex;
+  flex-direction: column;
+  background-color: #e3e1e1;
+  height: 60vh;
+  width: 60vh;
+}
+
+#messages {
+  display: flex;
+  flex-direction:column-reverse;
+  background-color: #e3e1e1;
+  height: 90%;
+  overflow: auto;
+}
+
+#text-box {
+  display: flex;
+  flex-direction:row;
+  height: 10%;
+}
+
+#message-input {
+  height: auto;
+  width: 90%;
+  font-size: calc(10px + 1vmin);
+  border-width: 2px;
+}
+
+#message-send {
+  background-color: #e3e1e1;
+  height: auto;
+  width: 10%;
+  font-size: calc(10px + 1vmin);
+  border-width: 2px;
+}
+
+.message {
+  background-color: #c8c8c8;
+  margin: 5px;
+  margin-top: 0px;
+  padding-left: 10px;
+  width: auto;
+  font-size: calc(10px + 1vmin);
+  border-radius: 10px;
+}
+
+.message-joined {
+  text-align: center;
+}
