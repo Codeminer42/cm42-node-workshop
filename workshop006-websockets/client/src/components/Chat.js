@@ -5,9 +5,7 @@ import Message from "./Message";
 function Chat({ socket }) {
   const [currentMessage, setCurrentMessage] = useState();
   const [chatHistory, setChatHistory] = useState([
-    { message: "eai", name: "André", type: messagesTypes.talk },
-    { message: "Oi, galera!", name: "André", type: messagesTypes.talk },
-    { name: "André", type: messagesTypes.joined },
+    { name: "Você", type: messagesTypes.joined },
   ]);
 
   useEffect(() => {
@@ -21,16 +19,17 @@ function Chat({ socket }) {
   }, [socket]);
 
   function onMessage({ message, name }) {
-    setChatHistory([
+    setChatHistory((history) => [
       { message, name, type: messagesTypes.talk },
-      ...chatHistory,
+      ...history,
     ]);
   }
 
   function onUserJoined({ name }) {
-    setChatHistory([
+    alert("JOIN");
+    setChatHistory((history) => [
       { name: name, type: messagesTypes.joined },
-      ...chatHistory,
+      ...history,
     ]);
   }
 
@@ -47,8 +46,8 @@ function Chat({ socket }) {
   return (
     <div id="chat">
       <div id="messages">
-        {chatHistory.map(({ message = "", name, type }) => (
-          <Message message={message} name={name} type={type} />
+        {chatHistory.map(({ message = "", name, type }, index) => (
+          <Message key={index} message={message} name={name} type={type} />
         ))}
       </div>
       <form onSubmit={handleSendMessage} id="text-box">

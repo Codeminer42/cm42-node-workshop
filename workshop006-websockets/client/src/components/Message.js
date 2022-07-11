@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { messagesTypes } from "../context";
 
 const JoinMessage = ({ name }) => <p>{name} has joined the chat</p>;
@@ -15,12 +14,11 @@ const messageTypesMap = {
 };
 
 function Message({ message, name, type }) {
-  const renderMessage = useCallback(
-    () => messageTypesMap[type]({ name: name, message: message }) || null,
-    [type]
+  return (
+    <div className="message">
+      {messageTypesMap[type]({ name: name, message: message })}
+    </div>
   );
-
-  return <div class="message">{renderMessage()}</div>;
 }
 
 export default Message;

@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import Modal from "./components/Modal";
 import Chat from "./components/Chat";
 
-const serverUrl = "";
+const serverUrl = "localhost:8080";
 
 function App() {
   const [socket, setSocket] = useState();
@@ -12,9 +12,8 @@ function App() {
   const isConnected = !!socket;
 
   function handleModalSubmit(name) {
-    // const socketClient = io(serverUrl, { auth: { name } });
-    // socketClient.once("connection", () => setSocket(socketClient));
-    setSocket({ on: () => {}, off: () => {}, emit: () => {} });
+    const socketClient = io(serverUrl, { auth: { name }, reconnection: false });
+    socketClient.once("connect", () => setSocket(socketClient));
   }
 
   return (
