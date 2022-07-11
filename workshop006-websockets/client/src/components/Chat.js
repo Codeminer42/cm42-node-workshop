@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { messagesTypes } from "../context";
 import Message from "./Message";
 
-function Chat({ socket }) {
-  const [currentMessage, setCurrentMessage] = useState();
-  const [chatHistory, setChatHistory] = useState([
-    { name: "Você", type: messagesTypes.joined },
-  ]);
+function Chat({ socket, initialMessages }) {
+  const [currentMessage, setCurrentMessage] = useState("");
+  const [chatHistory, setChatHistory] = useState(initialMessages);
 
   useEffect(() => {
     socket?.on("message", onMessage);
-    socket?.on("userJoined", onUserJoined);
+    socket?.on("userJoined", (name) => {
+      alert(`${name} has joined the chat`);
+    });
 
     return () => {
       socket?.off("message");
@@ -18,19 +18,9 @@ function Chat({ socket }) {
     };
   }, [socket]);
 
-  function onMessage({ message, name }) {
-    setChatHistory((history) => [
-      { message, name, type: messagesTypes.talk },
-      ...history,
-    ]);
-  }
-
-  function onUserJoined({ name }) {
-    alert("JOIN");
-    setChatHistory((history) => [
-      { name: name, type: messagesTypes.joined },
-      ...history,
-    ]);
+  function onMessage(messages) {
+    setChatHistory(messages);
+    console.log(chatHistory);
   }
 
   function handleWriteMessage(event) {

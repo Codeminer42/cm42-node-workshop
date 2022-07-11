@@ -16,7 +16,10 @@ const messageTypesMap = {
 function Message({ message, name, type }) {
   return (
     <div className="message">
-      {messageTypesMap[type]({ name: name, message: message })}
+      {/* {messageTypesMap[type]({ name: name, message: message })} */}
+      <p>
+        {name}: {message}
+      </p>
     </div>
   );
 }

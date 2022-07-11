@@ -8,18 +8,20 @@ const serverUrl = "localhost:8080";
 
 function App() {
   const [socket, setSocket] = useState();
+  const [initialMessages, setInitialMessages] = useState();
 
   const isConnected = !!socket;
 
   function handleModalSubmit(name) {
     const socketClient = io(serverUrl, { auth: { name }, reconnection: false });
     socketClient.once("connect", () => setSocket(socketClient));
+    socketClient.once("message", (messages) => setInitialMessages(messages));
   }
 
   return (
     <div className="App">
       {isConnected ? (
-        <Chat socket={socket} />
+        <Chat socket={socket} initialMessages={initialMessages} />
       ) : (
         <Modal handleModalSubmit={handleModalSubmit} />
       )}
