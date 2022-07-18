@@ -44,7 +44,13 @@ const ObjectionRecipeRepository = {
   },
 
   async searchByIngredients(ingredientsList, operator) {
-    return [];
+    const recipeModels = await RecipeModel.query().withGraphJoined({
+      steps: true,
+      ingredients: true,
+    })
+    .whereIn('ingredients.name', ingredientsList);
+
+    return recipeModels.map(ObjectionRecipeDataMapper.toEntity);
   }
 };
 
