@@ -42,6 +42,10 @@ const ObjectionRecipeRepository = {
 
     return recipeModels.map(ObjectionRecipeDataMapper.toEntity);
   },
+
+  async searchByIngredients(ingredientsList, operator) {
+    return [];
+  }
 };
 
 const initializeRecipeRepositiory = () => {

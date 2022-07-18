@@ -2,6 +2,7 @@ const { Router } = require('express');
 const { createRecipeHandler } = require('./CreateRecipeHandler');
 const { getRecipeByIdHandler } = require('./GetRecipeByIdHandler');
 const { listRecipesHandler } = require('./ListRecipesHandler');
+const { searchByIngredientsHandler } = require('./SearchByIngredientsHandler');
 
 const recipesController = () => {
   const recipesRouter = Router();
@@ -80,6 +81,8 @@ const recipesController = () => {
    *              type: number
    */
   recipesRouter.get('/', listRecipesHandler);
+
+  recipesRouter.get('/search', searchByIngredientsHandler);
 
   /**
    * @swagger
