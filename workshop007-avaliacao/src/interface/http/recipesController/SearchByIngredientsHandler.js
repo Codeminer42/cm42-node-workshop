@@ -4,8 +4,8 @@ const { RecipeSerializer } = require('./RecipeSerializer');
 
 const searchByIngredientsHandler = handler(async (req, res) => {
   const { ingredients, operator } = req.query;
-  
-  const recipes = await searchByIngredients()
+
+  const recipes = await searchByIngredients(ingredients, operator);
 
   res.status(200).json({
     data: RecipeSerializer.serializeList(recipes),
