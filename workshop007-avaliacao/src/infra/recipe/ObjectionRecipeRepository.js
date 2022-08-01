@@ -45,20 +45,17 @@ const ObjectionRecipeRepository = {
 
   async searchByIngredients(ingredientsList, operator) {
     let recipeQuery = RecipeModel.query()
-      .withGraphJoined({
-        steps: true,
-        ingredients: true,
-      })
+      .select('recipes.id', 'recipes.name')
+      .groupBy('recipes.id')
+      .joinRelated('ingredients')
       .whereIn('ingredients.name', ingredientsList);
 
     if (operator === 'ALL') {
-      recipeQuery = recipeQuery
-        .groupBy('recipes.id')
-        .havingRaw('ARRAY_AGG(ingredients.name) <@ ARRAY[:ingredients]', {
-          ingredients: ingredientsList,
-        });
+      recipeQuery = recipeQuery.havingRaw('ARRAY_AGG(ingredients.name) @> :ingredients', {
+        ingredients: ingredientsList,
+      });
     }
-    return (await recipeQuery).map(ObjectionRecipeDataMapper.toEntity);
+    return await recipeQuery;
   },
 };
 
