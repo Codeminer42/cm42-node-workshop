@@ -1,0 +1,15 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run tests for current file",
+			"type": "shell",
+			"command": "npm run docker:test -- -- --no-coverage ${relativeFile}",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
