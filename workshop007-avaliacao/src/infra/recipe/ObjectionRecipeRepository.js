@@ -45,7 +45,7 @@ const ObjectionRecipeRepository = {
 
   async searchByIngredients(ingredientsList, operator) {
     let recipeQuery = RecipeModel.query()
-      .select('recipes.id', 'recipes.name')
+      .select('recipes.id')
       .groupBy('recipes.id')
       .joinRelated('ingredients')
       .whereIn('ingredients.name', ingredientsList);
@@ -55,7 +55,15 @@ const ObjectionRecipeRepository = {
         ingredients: ingredientsList,
       });
     }
-    return await recipeQuery;
+
+    const recipeModels = await RecipeModel.query()
+      .withGraphJoined({
+        steps: true,
+        ingredients: true,
+      })
+      .whereIn('recipes.id', recipeQuery);
+
+    return recipeModels.map(ObjectionRecipeDataMapper.toEntity);
   },
 };
 
