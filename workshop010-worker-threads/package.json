@@ -1,0 +1,13 @@
+{
+  "name": "node-worker-threads-tests",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "vitest",
+    "start": "node src/index.js"
+  },
+  "devDependencies": {
+    "vitest": "^0.25.3"
+  }
+}
