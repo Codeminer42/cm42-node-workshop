@@ -1,10 +1,17 @@
 const { createServer } = require("net");
+const connectedClients = [];
 
 const server = createServer((socket) => {
+  connectedClients.push(socket);
   const remoteAddress = socket.remoteAddress;
   console.log(remoteAddress + " connected");
 
   socket.on("data", (data) => {
+    connectedClients.forEach((client) => {
+      try {
+        client.write(data);
+      } catch {}
+    });
     console.log(data.toString());
   });
 

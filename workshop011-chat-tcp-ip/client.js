@@ -9,4 +9,8 @@ const client = createConnection(port, host, () => {
   rl.on("line", (input) => {
     client.write(input);
   });
+
+  client.on("data", (data) => {
+    console.log(data.toString());
+  });
 });
