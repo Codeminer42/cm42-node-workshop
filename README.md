@@ -4,9 +4,8 @@ This repository includes the pratical lessons from our weekly Node.js workshop.
 
 ## Organizers
 
-- @andreLumor
-- Leonardo Negreiros
 - @paulodiovani
+- @paulo.souza
 
 ## Schedule and topics board
 
