@@ -1,45 +1,68 @@
 import { Transform } from "node:stream";
 
-/**
- * 
-  {
-    total_kills: 45;
-    players: ["Dono da bola", "Isgalamido", "Zeh"]
-    kills: {
-      "Dono da bola": 5,
-      "Isgalamido": 18,
-      "Zeh": 20
-    }
-  }
- */
+const gameState = {
+  currentGame: -1,
+  games: [],
+};
 
-const players = [];
-let totalKills = 0;
+const formatGamePlayers = ({ totalKills, players }, index) => {
+  const playersFormatted = Object.entries(players).reduce(
+    (acc, [id, value]) => {
+      const playerLabel = `${id}: ${value.totalKills}`;
+
+      if (acc) return `${acc}, ${playerLabel}`;
+      return `${acc}${playerLabel}`;
+    },
+    ""
+  );
+
+  return `#GAME: ${index} | Players: ${playersFormatted} | Total Kills: ${totalKills}`;
+};
 
 const transformStream = new Transform({
   transform(chunk, encoding, callback) {
-    const line = chunk.toString();
-    const parts = line.split(" ");
-    const action = parts[2];
+    const line = chunk.toString().trim();
+    const [, ...parts] = line.split(" ");
+    const [action, ...actionData] = parts.join(" ").split(": ");
 
-    if (action?.includes("Kill")) {
-      totalKills += 1;
-
-      callback(null, `\rTotal Kills: ${totalKills}`);
-      // setTimeout(() => {
-      // }, 250);
-
-      return;
+    if (action === "InitGame") {
+      gameState.currentGame += 1;
+      gameState.games.push({
+        totalKills: 0,
+        players: {},
+      });
     }
 
-    if (action?.includes("Shutdown")) {
+    if (action === "ClientConnect") {
+      const [playerId] = actionData;
+
+      gameState.games[gameState.currentGame].players[playerId] = {
+        totalKills: 0,
+      };
+    }
+
+    if (action === "Kill") {
+      const [killerId] = actionData[0].split(" ");
+
+      if (gameState.games[gameState.currentGame].players[killerId]) {
+        gameState.games[gameState.currentGame].players[
+          killerId
+        ].totalKills += 1;
+      }
+      gameState.games[gameState.currentGame].totalKills += 1;
+    }
+
+    if (action === "Shutdown") {
       callback(null, `\nGAME OVER\n`);
-
-      this.emit("close");
       return;
     }
 
-    callback(null, "");
+    const totalKillsPerGame = gameState.games
+      .map(formatGamePlayers)
+      .join("\n")
+      .concat("\n");
+
+    callback(null, "\u001Bc" + totalKillsPerGame);
   },
 });
 
