@@ -1,5 +1,6 @@
 import { createReadStream } from "fs";
 import { resolve } from "path";
+import { pipeline } from "node:stream";
 import transformStream from "./transform-stream.mjs";
 import Split from "stream-split";
 
@@ -12,10 +13,13 @@ const main = () => {
     encoding: "utf-8",
   });
 
-  readStream
-    .pipe(splitter)
-    .pipe(transformStream)
-    .pipe(process.stdout);
+  pipeline(readStream, splitter, transformStream, process.stdout, (error) => {
+    if (error) {
+      console.error('Something wrong!', error);
+    } else {
+      console.log('Parse is over!')
+    }
+  });
 };
 
 main();
