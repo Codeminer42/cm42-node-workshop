@@ -15,10 +15,10 @@ const main = () => {
 
   pipeline(readStream, splitter, transformStream, process.stdout, (error) => {
     if (error) {
-      console.error('Something wrong!', error);
-    } else {
-      console.log('Parse is over!')
+      return console.error('Something wrong!', error);
     }
+
+    console.error('Parse is over!')
   });
 };
 
