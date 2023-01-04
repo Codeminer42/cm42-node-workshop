@@ -37,7 +37,7 @@ const kill = (actionData) => {
   gameState.games[gameState.currentGame].totalKills += 1;
 };
 
-const transformStream = new Transform({
+const logParser = new Transform({
   objectMode: true,
   transform(chunk, encoding, callback) {
     const line = chunk.toString().trim();
@@ -57,4 +57,4 @@ const transformStream = new Transform({
   },
 });
 
-export default transformStream;
+export default logParser;

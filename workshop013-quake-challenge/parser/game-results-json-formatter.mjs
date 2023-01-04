@@ -18,7 +18,7 @@ const formatGamePlayers = ({ totalKills, players }, index) => {
   );
 };
 
-const gameStateFormatStream = new Transform({
+const gameResultsJsonFormatter = new Transform({
   objectMode: true,
   transform(gameState, encoding, callback) {
     const totalKillsPerGame = gameState.games
@@ -30,4 +30,4 @@ const gameStateFormatStream = new Transform({
   },
 });
 
-export default gameStateFormatStream;
+export default gameResultsJsonFormatter;
