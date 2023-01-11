@@ -39,7 +39,7 @@ const kill = (actionData) => {
 
 const logParser = new Transform({
   objectMode: true,
-  transform(chunk, encoding, callback) {
+  transform(chunk, _encoding, callback) {
     const line = chunk.toString().trim();
     const [, ...parts] = line.split(" ");
     const [action, ...actionData] = parts.join(" ").split(": ");

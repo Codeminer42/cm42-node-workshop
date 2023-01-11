@@ -29,7 +29,7 @@ export const parseLogFile = (outputStream, callback) => {
 const main = () => {
   const outputStream = process.stdout;
 
-  parseLogFile(outputStream, (error, result) => {
+  parseLogFile(outputStream, (error) => {
     if (error) {
       return console.error('Something wrong!', error);
     }
