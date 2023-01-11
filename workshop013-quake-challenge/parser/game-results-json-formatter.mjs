@@ -20,12 +20,12 @@ export const gameResultsFormatter = new Transform({
   objectMode: true,
   transform(gameState, _encoding, callback) {
     const games = gameState.games
-      .map(formatGamePlayers)
+      .map(formatGamePlayers);
+
     const gameResults = {
       games,
     };
 
-    // callback(null, "\u001Bc" + );
     callback(null, gameResults);
   },
 });
@@ -33,7 +33,7 @@ export const gameResultsFormatter = new Transform({
 
 export const jsonFormatter = new Transform({
   objectMode: true,
-  transform(totalKillsPerGame, _encoding, callback) {
-    callback(null, JSON.stringify(totalKillsPerGame, null, 2));
+  transform(gamesInfo, _encoding, callback) {
+    callback(null, JSON.stringify(gamesInfo, null, 2));
   },
 }); 
