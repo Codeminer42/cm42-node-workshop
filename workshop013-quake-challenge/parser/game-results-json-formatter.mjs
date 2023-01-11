@@ -19,10 +19,14 @@ const formatGamePlayers = ({ totalKills, players }, index) => {
 export const gameResultsFormatter = new Transform({
   objectMode: true,
   transform(gameState, _encoding, callback) {
-    const totalKillsPerGame = gameState.games
+    const games = gameState.games
       .map(formatGamePlayers)
-    // callback(null, "\u001Bc" + totalKillsPerGame);
-    callback(null, totalKillsPerGame);
+    const gameResults = {
+      games,
+    };
+
+    // callback(null, "\u001Bc" + );
+    callback(null, gameResults);
   },
 });
 
