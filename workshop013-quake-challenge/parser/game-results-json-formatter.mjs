@@ -16,24 +16,12 @@ const formatGamePlayers = ({ totalKills, players }, index) => {
   );
 };
 
-export const gameResultsFormatter = new Transform({
+export const createJsonFormatter = () => new Transform({
   objectMode: true,
   transform(gameState, _encoding, callback) {
     const games = gameState.games
       .map(formatGamePlayers);
 
-    const gameResults = {
-      games,
-    };
-
-    callback(null, gameResults);
+    callback(null, JSON.stringify({ games }, null, 2));
   },
 });
-
-
-export const jsonFormatter = new Transform({
-  objectMode: true,
-  transform(gamesInfo, _encoding, callback) {
-    callback(null, JSON.stringify(gamesInfo, null, 2));
-  },
-}); 
