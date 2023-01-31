@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { parseLogFile } from "../parser/index.mjs";
-import { jsonFormatter } from '../parser/game-results-json-formatter.mjs';
+import { resultsHandler } from "./results-handler.mjs";
 
 const indexRouter = Router();
 
@@ -9,20 +8,6 @@ indexRouter.get("/", (_req, res) => {
   res.send(JSON.stringify({ hello: "world" }));
 });
 
-indexRouter.get("/results", (_req, res) => {
-  res.setHeader("Content-Type", "application/json");
-  
-  const outputStream = jsonFormatter
-  jsonFormatter
-    .pipe(res)
-
-  parseLogFile(outputStream, (error) => {
-    if (error) {
-      res.status(500).json({ error: "Oh no, something wrong happened" });
-      return;
-    }
-    res.end();
-  });
-});
+indexRouter.get("/results", resultsHandler);
 
 export default indexRouter;

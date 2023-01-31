@@ -1,32 +1,33 @@
 import { createReadStream } from "fs";
 import { resolve } from "path";
 import { Transform, Writable, pipeline } from "node:stream";
-import logParser from "./log-parser.mjs";
+import createLogParser from "./log-parser.mjs";
 import Split from "stream-split";
-import { gameResultsFormatter, jsonFormatter } from "./game-results-json-formatter.mjs";
+import { createJsonFormatter } from "./game-results-json-formatter.mjs";
 import { pathToFileURL } from "url";
 
-export const lineSplitter = new Split(new Buffer.from("\n"));
-
 export const parseLogFile = (outputStream, callback) => {
+  const lineSplitter = new Split("\n");
+
   const dirname = resolve();
 
   const logFileReader = createReadStream(`${dirname}/parser/quake.log`, {
     encoding: "utf-8",
   });
 
+  const logParser = createLogParser();
+
   pipeline(
     logFileReader,
     lineSplitter,
     logParser,
-    gameResultsFormatter,
     outputStream,
     callback
   );
 };
 
 const main = () => {
-  const outputStream = jsonFormatter
+  const outputStream = createJsonFormatter()
   outputStream
     .pipe(new Transform({
       transform(chunk, _encoding, callback) {

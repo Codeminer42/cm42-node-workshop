@@ -1,11 +1,6 @@
-import { Transform } from "node:stream";
+import { Duplex } from "node:stream";
 
-const gameState = {
-  currentGame: -1,
-  games: [],
-};
-
-const initGame = () => {
+const initGame = (gameState) => {
   gameState.currentGame += 1;
   gameState.games.push({
     totalKills: 0,
@@ -13,7 +8,7 @@ const initGame = () => {
   });
 };
 
-const clientConnect = (actionData) => {
+const clientConnect = (gameState, actionData) => {
   const [playerId] = actionData;
 
   gameState.games[gameState.currentGame].players[playerId] = {
@@ -21,14 +16,14 @@ const clientConnect = (actionData) => {
   };
 };
 
-const clientUserinfoChanged = (actionData) => {
+const clientUserinfoChanged = (gameState, actionData) => {
   const [playerId, ...playerInfo] = actionData[0].split(" ");
   const [, playerName] = playerInfo.join(" ").split("\\");
 
   gameState.games[gameState.currentGame].players[playerId].name = playerName;
 };
 
-const kill = (actionData) => {
+const kill = (gameState, actionData) => {
   const [killerId] = actionData[0].split(" ");
 
   if (gameState.games[gameState.currentGame].players[killerId]) {
@@ -37,24 +32,38 @@ const kill = (actionData) => {
   gameState.games[gameState.currentGame].totalKills += 1;
 };
 
-const logParser = new Transform({
+const createLogParser = () => new Duplex({
   objectMode: true,
-  transform(chunk, _encoding, callback) {
+  construct(callback) {
+    this.gameState = {
+      currentGame: -1,
+      games: [],
+    };
+
+    callback();
+  },
+  write(chunk, _encoding, callback) {
     const line = chunk.toString().trim();
     const [, ...parts] = line.split(" ");
     const [action, ...actionData] = parts.join(" ").split(": ");
 
     const actions = {
-      InitGame: initGame,
-      ClientConnect: () => clientConnect(actionData),
-      ClientUserinfoChanged: () => clientUserinfoChanged(actionData),
-      Kill: () => kill(actionData),
+      InitGame: () => initGame(this.gameState),
+      ClientConnect: () => clientConnect(this.gameState, actionData),
+      ClientUserinfoChanged: () => clientUserinfoChanged(this.gameState, actionData),
+      Kill: () => kill(this.gameState, actionData),
     };
 
     if (action in actions) actions[action]();
 
-    callback(null, gameState);
+    callback(null, this.gameState);
   },
+  read() {},
+  final(callback) {
+    this.push(this.gameState);
+    this.push(null);
+    callback();
+  }
 });
 
-export default logParser;
+export default createLogParser;
