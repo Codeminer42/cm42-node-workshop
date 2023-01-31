@@ -1,6 +1,6 @@
 import { createReadStream } from "fs";
 import { resolve } from "path";
-import { Transform, Writable, pipeline } from "node:stream";
+import { Transform, pipeline } from "node:stream";
 import createLogParser from "./log-parser.mjs";
 import Split from "stream-split";
 import { createJsonFormatter } from "./game-results-json-formatter.mjs";
@@ -34,12 +34,6 @@ const main = () => {
         callback(null, "\u001Bc" + chunk);
       }
     }))
-    // uncomment to add a delay to emulate real time prints
-    // .pipe(new Transform({
-    //   transform(chunk, _encoding, callback) {
-    //     setTimeout(() => callback(null, chunk), 100)
-    //   }
-    // }))
     .pipe(process.stdout)
 
   parseLogFile(outputStream, (error) => {
