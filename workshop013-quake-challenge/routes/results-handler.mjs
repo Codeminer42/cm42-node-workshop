@@ -1,6 +1,5 @@
-import { Writable } from "node:stream"
 import { parseLogFile } from "../parser/index.mjs";
-import { createJsonFormatter } from "../parser/game-results-json-formatter.mjs"
+import { createJsonFormatter } from "../parser/game-results-json-formatter.mjs";
 
 export const resultsHandler = (req, res) => {
   const { format = "json" } = req.query;
@@ -22,23 +21,7 @@ export const resultsHandler = (req, res) => {
   }
   else if (format === "html") {
     res.setHeader("Content-Type", "text/html");
-
-    const outputStream = new Writable({
-      objectMode: true,
-      write(result, _encoding, callback) {
-        res.render("results", { games: result.games });
-
-        callback();
-      }
-    });
-
-    parseLogFile(outputStream, (error) => {
-      if (error) {
-        res.status(500).send("Oh no, something wrong happened");
-        return;
-      }
-      res.end();
-    });
+    res.render("results", { games: [] });
   } else
   {
     res.status(415).send("Unsupported format! =(");

@@ -1,17 +1,47 @@
-import { createReadStream } from "fs";
+import { open, read, close } from "fs";
 import { resolve } from "path";
 import { Transform, pipeline } from "node:stream";
 import createLogParser from "./log-parser.mjs";
 import Split from "stream-split";
 import { createJsonFormatter } from "./game-results-json-formatter.mjs";
 import { pathToFileURL } from "url";
+import { Readable } from "stream";
+
+const createInfiniteReadStream = (fileName) => new Readable({
+  encoding: "utf-8",
+  construct(callback) {
+    open(fileName, "r", (error, fd) => {
+      if (error) {
+        return callback(error);
+      }
+
+      this.fd = fd;
+      callback();
+    });
+  },
+  read(size) {
+    const buffer = Buffer.alloc(size);
+    read(this.fd, buffer, 0, size, null, (error, bytesRead) => {
+      if (error) {
+        return this.destroy(error);
+      }
+
+      this.push(buffer.subarray(0, bytesRead));
+    });
+  },
+  destroy(error, callback) {
+    close(this.fd, () => {
+      callback(error);
+    });
+  }
+})
 
 export const parseLogFile = (outputStream, callback) => {
   const lineSplitter = new Split("\n");
 
   const dirname = resolve();
 
-  const logFileReader = createReadStream(`${dirname}/parser/quake.log`, {
+  const logFileReader = createInfiniteReadStream(`${dirname}/parser/quake.log`, {
     encoding: "utf-8",
   });
 

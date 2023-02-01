@@ -1,4 +1,4 @@
-import { Duplex } from "node:stream";
+import { Transform } from "node:stream";
 
 const initGame = (gameState) => {
   gameState.currentGame += 1;
@@ -32,7 +32,7 @@ const kill = (gameState, actionData) => {
   gameState.games[gameState.currentGame].totalKills += 1;
 };
 
-const createLogParser = () => new Duplex({
+const createLogParser = () => new Transform({
   objectMode: true,
   construct(callback) {
     this.gameState = {
@@ -42,7 +42,7 @@ const createLogParser = () => new Duplex({
 
     callback();
   },
-  write(chunk, _encoding, callback) {
+  transform(chunk, _encoding, callback) {
     const line = chunk.toString().trim();
     const [, ...parts] = line.split(" ");
     const [action, ...actionData] = parts.join(" ").split(": ");
@@ -57,12 +57,6 @@ const createLogParser = () => new Duplex({
     if (action in actions) actions[action]();
 
     callback(null, this.gameState);
-  },
-  read() {},
-  final(callback) {
-    this.push(this.gameState);
-    this.push(null);
-    callback();
   }
 });
 
