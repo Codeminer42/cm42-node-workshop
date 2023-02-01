@@ -1,8 +1,7 @@
 import Split from "stream-split";
 import createLogParser from "./log-parser.mjs";
 import { LOG_FILE } from '../lib/config.mjs';
-import { Readable } from "stream";
-import { Transform, pipeline } from "node:stream";
+import { Readable, Transform, pipeline } from "stream";
 import { createJsonFormatter } from "./game-results-json-formatter.mjs";
 import { open, read, close } from "fs";
 import { pathToFileURL } from "url";

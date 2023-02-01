@@ -1,6 +1,7 @@
-import { Writable } from "node:stream";
-import { parseLogFile } from "./parser/index.mjs";
 import ejs from "ejs";
+import { Writable } from "stream";
+import { parseLogFile } from "./parser/index.mjs";
+import { resolve } from "path";
 
 const createSocket =  (io) => {
   io.on("connection", (socket) => {
@@ -10,7 +11,8 @@ const createSocket =  (io) => {
       objectMode: true,
 
       async write(result, _encoding, callback) {
-        const html = await ejs.renderFile("./views/partials/result-list.ejs", { games: result.games });
+        const templatePath = resolve("views", "partials", "result-list.ejs");
+        const html = await ejs.renderFile(templatePath, { games: result.games });
         socket.emit("results.html", html);
 
         callback();
