@@ -1,14 +1,14 @@
-import { open, read, close } from "fs";
-import { resolve } from "path";
-import { Transform, pipeline } from "node:stream";
-import createLogParser from "./log-parser.mjs";
 import Split from "stream-split";
+import createLogParser from "./log-parser.mjs";
+import { LOG_FILE } from '../lib/config.mjs';
+import { Readable, Transform, pipeline } from "stream";
 import { createJsonFormatter } from "./game-results-json-formatter.mjs";
+import { open, read, close } from "fs";
 import { pathToFileURL } from "url";
-import { Readable } from "stream";
+import { resolve } from "path";
 
-const createInfiniteReadStream = (fileName) => new Readable({
-  encoding: "utf-8",
+const createInfiniteReadStream = (fileName, { encoding }) => new Readable({
+  encoding,
   construct(callback) {
     open(fileName, "r", (error, fd) => {
       if (error) {
@@ -34,14 +34,12 @@ const createInfiniteReadStream = (fileName) => new Readable({
       callback(error);
     });
   }
-})
+});
 
 export const parseLogFile = (outputStream, callback) => {
   const lineSplitter = new Split("\n");
 
-  const dirname = resolve();
-
-  const logFileReader = createInfiniteReadStream(`${dirname}/parser/quake.log`, {
+  const logFileReader = createInfiniteReadStream(resolve(LOG_FILE), {
     encoding: "utf-8",
   });
 
