@@ -35,7 +35,7 @@ const createInfiniteReadStream = (fileName, { encoding }) => new Readable({
       callback(error);
     });
   }
-})
+});
 
 export const parseLogFile = (outputStream, callback) => {
   const lineSplitter = new Split("\n");
