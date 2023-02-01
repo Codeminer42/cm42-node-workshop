@@ -4,6 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "cli": "node parser/index.mjs",
+    "dev": "nodemon server.mjs",
+    "start": "node server.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -14,5 +17,8 @@
     "express": "^4.18.2",
     "socket.io": "^4.5.4",
     "stream-split": "^1.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }
