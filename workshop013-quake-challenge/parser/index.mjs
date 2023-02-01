@@ -1,48 +1,21 @@
 import Split from "stream-split";
 import createLogParser from "./log-parser.mjs";
 import { LOG_FILE } from '../lib/config.mjs';
-import { Readable } from "stream";
-import { Transform, pipeline } from "node:stream";
+import { Transform, pipeline } from "stream";
 import { createJsonFormatter } from "./game-results-json-formatter.mjs";
-import { open, read, close } from "fs";
 import { pathToFileURL } from "url";
 import { resolve } from "path";
+import { spawn } from "child_process";
 
-const createInfiniteReadStream = (fileName, { encoding }) => new Readable({
-  encoding,
-  construct(callback) {
-    open(fileName, "r", (error, fd) => {
-      if (error) {
-        return callback(error);
-      }
-
-      this.fd = fd;
-      callback();
-    });
-  },
-  read(size) {
-    const buffer = Buffer.alloc(size);
-    read(this.fd, buffer, 0, size, null, (error, bytesRead) => {
-      if (error) {
-        return this.destroy(error);
-      }
-
-      this.push(buffer.subarray(0, bytesRead));
-    });
-  },
-  destroy(error, callback) {
-    close(this.fd, () => {
-      callback(error);
-    });
-  }
-});
+const createInfiniteReadStream = (fileName) => {
+  const tail = spawn('tail', ['-n 0', '-f', fileName]);
+  return tail.stdout;
+};
 
 export const parseLogFile = (outputStream, callback) => {
   const lineSplitter = new Split("\n");
 
-  const logFileReader = createInfiniteReadStream(resolve(LOG_FILE), {
-    encoding: "utf-8",
-  });
+  const logFileReader = createInfiniteReadStream(resolve(LOG_FILE));
 
   const logParser = createLogParser();
 
