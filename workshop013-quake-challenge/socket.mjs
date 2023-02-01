@@ -10,7 +10,7 @@ const createSocket =  (io) => {
       objectMode: true,
 
       async write(result, _encoding, callback) {
-        const html = await ejs.renderFile("./views/result-list.ejs", { games: result.games });
+        const html = await ejs.renderFile("./views/partials/result-list.ejs", { games: result.games });
         socket.emit("results.html", html);
 
         callback();
