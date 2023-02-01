@@ -40,7 +40,8 @@ const main = () => {
     if (error) {
       return console.error('Something wrong!', error);
     }
-    console.error('Parse is over!')
+
+    console.error('\n\nParse is over!')
   })
 }
 
