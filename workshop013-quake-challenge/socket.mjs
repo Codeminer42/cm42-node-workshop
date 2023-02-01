@@ -8,19 +8,18 @@ const createSocket =  (io) => {
 
     const outputStream = new Writable({
       objectMode: true,
-      write(result, _encoding, callback) {
-        ejs.renderFile("./views/result-list.ejs", { games: result.games })
-          .then((html) => {
-            io.emit("results.html", html);
 
-            callback();
-          });
+      async write(result, _encoding, callback) {
+        const html = await ejs.renderFile("./views/result-list.ejs", { games: result.games });
+        socket.emit("results.html", html);
+
+        callback();
       }
     });
 
     parseLogFile(outputStream, (error) => {
       if (error) {
-        io.emit("error", error);
+        socket.emit("error", error);
         return;
       }
     });
