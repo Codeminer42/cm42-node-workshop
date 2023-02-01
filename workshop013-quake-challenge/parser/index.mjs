@@ -6,6 +6,7 @@ import Split from "stream-split";
 import { createJsonFormatter } from "./game-results-json-formatter.mjs";
 import { pathToFileURL } from "url";
 import { Readable } from "stream";
+import { LOG_FILE } from '../lib/config.mjs';
 
 const createInfiniteReadStream = (fileName) => new Readable({
   encoding: "utf-8",
@@ -39,9 +40,7 @@ const createInfiniteReadStream = (fileName) => new Readable({
 export const parseLogFile = (outputStream, callback) => {
   const lineSplitter = new Split("\n");
 
-  const dirname = resolve();
-
-  const logFileReader = createInfiniteReadStream(`${dirname}/parser/quake.log`, {
+  const logFileReader = createInfiniteReadStream(resolve(LOG_FILE), {
     encoding: "utf-8",
   });
 
