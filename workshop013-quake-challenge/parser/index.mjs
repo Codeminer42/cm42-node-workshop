@@ -1,15 +1,15 @@
-import { open, read, close } from "fs";
-import { resolve } from "path";
-import { Transform, pipeline } from "node:stream";
-import createLogParser from "./log-parser.mjs";
 import Split from "stream-split";
-import { createJsonFormatter } from "./game-results-json-formatter.mjs";
-import { pathToFileURL } from "url";
-import { Readable } from "stream";
+import createLogParser from "./log-parser.mjs";
 import { LOG_FILE } from '../lib/config.mjs';
+import { Readable } from "stream";
+import { Transform, pipeline } from "node:stream";
+import { createJsonFormatter } from "./game-results-json-formatter.mjs";
+import { open, read, close } from "fs";
+import { pathToFileURL } from "url";
+import { resolve } from "path";
 
-const createInfiniteReadStream = (fileName) => new Readable({
-  encoding: "utf-8",
+const createInfiniteReadStream = (fileName, { encoding }) => new Readable({
+  encoding,
   construct(callback) {
     open(fileName, "r", (error, fd) => {
       if (error) {
