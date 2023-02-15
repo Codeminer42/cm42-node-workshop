@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  app:
+    image: node:18.0.0
+    command: npm run dev
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - 3030:3030
+    environment:
+      - PORT=3030
+
+  cache:
+    image: redis:7.0.8
+    ports:
+      - 6379:6379
+
+  redis_ui:
+    image: rediscommander/redis-commander
+    environment:
+      - REDIS_HOST=cache
+      - FOLDING_CHAR=+
+    ports:
+      - 8081:8081
