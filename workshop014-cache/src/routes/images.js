@@ -12,10 +12,18 @@ const imagesRouter = Router();
 imagesRouter.get(
   "/:imageName",
   asyncHandler(async (req, res) => {
-    const { readImage, processImage } = req.app.locals;
+    const { readImage, processImage, cacheImage, getCachedImage } =
+      req.app.locals;
     const { imageName } = req.params;
 
     console.time(`Execution time (${req.url})`);
+
+    const cachedImage = await getCachedImage({ url: req.url });
+
+    if (cachedImage) {
+      console.timeEnd(`Execution time (${req.url})`);
+      return res.setHeader("Content-Type", images.mimeType).send(cachedImage);
+    }
 
     const imagePath = join(images.storagePath, imageName);
 
@@ -24,6 +32,10 @@ imagesRouter.get(
     const image = await readImage(imagePath);
 
     const processedImage = await processImage(image, req.query);
+
+    cacheImage({ url: req.url, image: processedImage }).then(() =>
+      console.log("Image stored in cache")
+    );
 
     console.timeEnd(`Execution time (${req.url})`);
 

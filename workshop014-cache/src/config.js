@@ -1,7 +1,7 @@
 const { join } = require("path");
 
 const images = {
-  mimeType: "image/png",
+  mimeType: "image/jpeg",
   storagePath: join(__dirname, "..", "storage", "images"),
 };
 
