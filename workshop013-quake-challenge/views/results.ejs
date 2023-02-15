@@ -8,12 +8,13 @@
     <main id="main" class="w-50">
     </main>
     <script>
-      const socket = io();
-      socket.on("error", console.error);
-      socket.on("results.html", (html) => {
+      const source = new EventSource('http://localhost:8080/sse?topics=game')
+    
+      source.addEventListener('results.html', e => {
         const main = document.getElementById("main");
-        main.innerHTML = html;
-      });
+        const content = JSON.parse(e.data)
+        main.innerHTML = content.html;
+      })
     </script>
   </body>
 </html>
