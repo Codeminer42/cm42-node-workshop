@@ -9,13 +9,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2",
-    "express-async-handler": "^1.2.0",
-    "jimp": "^0.22.4",
-    "multer": "^1.4.5-lts.1",
-    "redis": "^4.6.4"
+    "express": "4.18.2",
+    "express-async-handler": "1.2.0",
+    "jimp": "0.22.4",
+    "multer": "1.4.5-lts.1",
+    "pino": "8.11.0",
+    "redis": "4.6.4"
   },
   "devDependencies": {
-    "nodemon": "^2.0.20"
+    "nodemon": "2.0.20",
+    "pino-pretty": "9.4.0"
   }
 }

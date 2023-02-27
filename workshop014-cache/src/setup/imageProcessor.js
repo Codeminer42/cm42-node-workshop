@@ -17,7 +17,10 @@ const applyImageMutation = (image, param, value) => {
 
 const setupImageProcessor = (app) => {
   app.locals.readImage = (path) =>
-    Jimp.read(path).then((image) => image.getBufferAsync(images.mimeType));
+    Jimp.read(path).then((image) => image.getBufferAsync(image.getMIME()));
+
+  app.locals.getImageMimeType = (imageBuffer) =>
+    Jimp.read(imageBuffer).then((image) => image.getMIME());
 
   app.locals.processImage = async (imageBuffer, params) =>
     Jimp.read(imageBuffer).then((image) =>
@@ -27,7 +30,7 @@ const setupImageProcessor = (app) => {
             applyImageMutation(currentImage, param, value),
           image
         )
-        .getBufferAsync(images.mimeType)
+        .getBufferAsync(image.getMIME())
     );
 };
 

@@ -11,6 +11,9 @@ services:
       - 3030:3030
     environment:
       - PORT=3030
+      - NODE_ENV=development
+      - LOG_LEVEL=debug
+      - REDIS_URL=redis://cache:6379/0
 
   cache:
     image: redis:7.0.8

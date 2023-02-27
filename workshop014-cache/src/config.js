@@ -1,8 +1,14 @@
 const { join } = require("path");
 
-const images = {
-  mimeType: "image/jpeg",
-  storagePath: join(__dirname, "..", "storage", "images"),
-};
+const server = { port: process.env.PORT || 3000 };
 
-module.exports = { images };
+const images = { storagePath: join(__dirname, "..", "storage", "images") };
+
+const redis = { url: process.env.REDIS_URL };
+
+module.exports = {
+  server,
+  images,
+  redis,
+  cachePath: join(__dirname, "..", "cache"),
+};
