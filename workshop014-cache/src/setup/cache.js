@@ -1,21 +1,25 @@
-const { createClient } = require("redis");
-const { randomUUID } = require("crypto");
-const { images } = require("../config");
 const { join } = require("path");
+const { randomUUID } = require("crypto");
 const { writeFile, readFile } = require("fs/promises");
 
-module.exports = function (app) {
-  const redis = createClient({ url: "redis://cache:6379/0" });
-  redis.connect().catch(console.error);
+const { cachePath } = require("../config");
+const { createRedisInstance } = require("../lib/redis");
 
-  redis.on("error", console.error);
+module.exports = function (app) {
+  const { logger } = app.locals;
+
+  const redis = createRedisInstance({ logger });
 
   app.locals.cacheImage = async function ({ url, image }) {
-    const path = join(images.storagePath, randomUUID());
+    const path = join(cachePath, randomUUID());
 
     await writeFile(path, image);
 
-    await redis.set(`image:${url}`, path);
+    const key = `image:${url}`;
+
+    await redis.set(key, path);
+
+    logger.debug(`Image stored in cache (Key: ${key} | Value: ${path})`);
   };
 
   app.locals.getCachedImage = async function ({ url }) {

@@ -11,18 +11,39 @@ const imagesRouter = Router();
 
 imagesRouter.get(
   "/:imageName",
+  (req, res, next) => {
+    const { logger } = req.app.locals;
+
+    const executionStart = performance.now();
+
+    res.locals.printExecutionTime = () =>
+      logger.debug(
+        `Execution time (${req.url}): ${performance.now() - executionStart} ms`
+      );
+
+    next();
+  },
   asyncHandler(async (req, res) => {
-    const { readImage, processImage, cacheImage, getCachedImage } =
-      req.app.locals;
     const { imageName } = req.params;
 
-    console.time(`Execution time (${req.url})`);
+    const {
+      readImage,
+      processImage,
+      cacheImage,
+      getCachedImage,
+      getImageMimeType,
+    } = req.app.locals;
+
+    const { printExecutionTime } = res.locals;
 
     const cachedImage = await getCachedImage({ url: req.url });
 
     if (cachedImage) {
-      console.timeEnd(`Execution time (${req.url})`);
-      return res.setHeader("Content-Type", images.mimeType).send(cachedImage);
+      printExecutionTime();
+
+      return res
+        .setHeader("Content-Type", await getImageMimeType(cachedImage))
+        .send(cachedImage);
     }
 
     const imagePath = join(images.storagePath, imageName);
@@ -33,13 +54,13 @@ imagesRouter.get(
 
     const processedImage = await processImage(image, req.query);
 
-    cacheImage({ url: req.url, image: processedImage }).then(() =>
-      console.log("Image stored in cache")
-    );
+    cacheImage({ url: req.url, image: processedImage });
 
-    console.timeEnd(`Execution time (${req.url})`);
+    printExecutionTime();
 
-    res.setHeader("Content-Type", images.mimeType).send(processedImage);
+    res
+      .setHeader("Content-Type", await getImageMimeType(processedImage))
+      .send(processedImage);
   })
 );
 
