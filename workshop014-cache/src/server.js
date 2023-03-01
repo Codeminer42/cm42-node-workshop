@@ -4,6 +4,7 @@ const { server: serverConfig } = require("./config");
 const setupImageProcessor = require("./setup/imageProcessor");
 const setupLogger = require("./setup/logger");
 const setupCache = require("./setup/cache");
+const setupWorkers = require("./setup/workers");
 const router = require("./routes");
 
 const app = express();
@@ -17,5 +18,6 @@ app.locals.server = server;
 setupLogger(app);
 setupImageProcessor(app);
 setupCache(app);
+setupWorkers(app);
 
 app.locals.logger.info(`App ready and listening in port ${serverConfig.port}.`);
