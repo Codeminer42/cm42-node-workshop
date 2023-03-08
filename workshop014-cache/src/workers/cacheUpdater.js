@@ -7,10 +7,11 @@ const config = require("../config");
 const redis = createRedisInstance({ logger: console });
 
 watch(config.images.storagePath, async (event, filename) => {
-  console.log(event, filename);
   const filePath = path.join(config.images.storagePath, filename);
 
-  if (!existsSync(filePath)) {
+  const fileWasDeleted = !existsSync(filePath);
+
+  if (fileWasDeleted) {
     const keys = redis.scanIterator({
       MATCH: `image:/${encodeURIComponent(filename)}*`,
     });
