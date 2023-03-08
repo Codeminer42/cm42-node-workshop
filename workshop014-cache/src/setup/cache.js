@@ -17,7 +17,7 @@ module.exports = function (app) {
 
     const key = `image:${url}`;
 
-    await redis.set(key, path);
+    await redis.set(key, path, { EX: 3600 });
 
     logger.debug(`Image stored in cache (Key: ${key} | Value: ${path})`);
   };
