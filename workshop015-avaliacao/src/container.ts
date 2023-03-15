@@ -1,4 +1,5 @@
 import { config } from './config';
+import { makeBalanceService } from './infra/balance/BalanceService';
 import { makeObjectionEntryRepository } from './infra/entries/ObjectionEntryRepository';
 import { makeAPIExchangeRateService } from './infra/exchangeRate/APIExchangeRateService';
 import { makeObjectionLedgerRepository } from './infra/ledgers/ObjectionLedgerRepository';
@@ -15,7 +16,12 @@ const exchangeRateService = makeAPIExchangeRateService({
   exchangeRateAPIClient,
 });
 
-const container = { entryRepository, ledgerRepository, exchangeRateService };
+const balanceService = makeBalanceService({
+  entryRepository,
+  ledgerRepository,
+});
+
+const container = { entryRepository, ledgerRepository, exchangeRateService, balanceService };
 
 type Container = typeof container;
 
