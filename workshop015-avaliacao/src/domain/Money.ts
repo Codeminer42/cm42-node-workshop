@@ -29,7 +29,7 @@ namespace Money {
     assertValidCurrency(currency);
 
     return (money: Type) => {
-      const rate = rates[`${money.currency}-${currency}`];
+      const rate = money.currency === currency ? 1 : rates[`${money.currency}-${currency}`];
 
       if (!rate) {
         throw BusinessError.create({ message: `No exchange rate for ${money.currency} to ${currency}` });

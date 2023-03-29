@@ -6,13 +6,16 @@ import { logger } from '../_lib/logger';
 import { prepareBoot } from '../_lib/boot';
 import { connectDatabase } from '../_lib/database';
 import { initializeServer } from '../_lib/http';
+import { initializeBackgroundJobs } from './backgroundJobs';
 
 const databaseArgs = { config, logger };
 const serverArgs = { config, logger, router, container };
+const backgroundJobsArgs = { container, logger };
 
 const boot = prepareBoot([
   () => connectDatabase(databaseArgs),
-  () => initializeServer(serverArgs)
+  () => initializeServer(serverArgs),
+  () => initializeBackgroundJobs(backgroundJobsArgs),
 ]);
 
 export { boot };

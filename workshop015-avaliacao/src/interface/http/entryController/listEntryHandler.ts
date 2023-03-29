@@ -18,23 +18,33 @@ const { getQuery } = makeValidator({
   }),
 });
 
-const listEntryHandler = handler(({ entryRepository, ledgerRepository, exchangeRateService }) => async (req, res) => {
-  const { page, in_currency } = getQuery(req);
+const listEntryHandler = handler(
+  ({ entryRepository, ledgerRepository, exchangeRateRepository }) =>
+    async (req, res) => {
+      const { page, in_currency } = getQuery(req);
 
-  const entries = await entryRepository.find(page);
+      const entries = await entryRepository.find(page);
 
-  let result = await Promise.all(
-    entries.map((entry) => ledgerRepository.findById(entry.ledgerId).then((ledger) => ({ ...entry, ledger })))
-  );
+      let result = await Promise.all(
+        entries.map((entry) => ledgerRepository.findById(entry.ledgerId).then((ledger) => ({ ...entry, ledger })))
+      );
 
-  if (in_currency) {
-    const rates = await exchangeRateService.getRates();
-    const exchange = Money.exchangeFor(in_currency.toUpperCase() as Money.AllowedCurrencies, rates);
+      if (in_currency) {
+        const rates = (await exchangeRateRepository.all()).reduce(
+          (acc, exchangeRate) => ({
+            ...acc,
+            [`${exchangeRate.originCurrency}-${exchangeRate.destinationCurrency}`]: exchangeRate.rate,
+          }),
+          {} as Money.AllowedRates
+        );
 
-    result = result.map((entry) => ({ ...entry, value: exchange(entry.value) }));
-  }
+        const exchange = Money.exchangeFor(in_currency.toUpperCase() as Money.AllowedCurrencies, rates);
 
-  res.json(result.map(entrySerializer));
-});
+        result = result.map((entry) => ({ ...entry, value: exchange(entry.value) }));
+      }
+
+      res.json(result.map(entrySerializer));
+    }
+);
 
 export { listEntryHandler };

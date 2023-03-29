@@ -17,7 +17,7 @@ const makeAPIExchangeRateService = ({ exchangeRateAPIClient }: Dependencies): Ex
         return currencySymbols.reduce((rates, symbolTo) => {
           return {
             ...rates,
-            [`${symbolFrom}-${symbolTo}`]: Number((ratesBasedInUSD[symbolFrom] / ratesBasedInUSD[symbolTo]).toFixed(2)),
+            [`${symbolFrom}-${symbolTo}`]: Number((ratesBasedInUSD[symbolTo] / ratesBasedInUSD[symbolFrom]).toFixed(2)),
           };
         }, rates);
       }, {} as Money.AllowedRates);
