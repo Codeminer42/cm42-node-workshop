@@ -16,6 +16,7 @@
     "db:create:dev": "createdbjs ${DATABASE_DB} --user=${DATABASE_USER} --password=${DATABASE_PASSWORD} --host=${DATABASE_HOST}",
     "db:migrate:test": "knex migrate:latest --env=test",
     "db:migrate:dev": "knex migrate:latest",
+    "db:migrate:dev:create": "knex migrate:make",
     "db:rollback:test": "knex migrate:rollback --env=test",
     "db:rollback:dev": "knex migrate:rollback",
     "db:seed:dev": "knex seed:run",
