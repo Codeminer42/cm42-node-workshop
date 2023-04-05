@@ -1,0 +1,36 @@
+{
+  "name": "codeminer42-logger",
+  "version": "0.5.0",
+  "description": "A custom logger from Codeminer42",
+  "main": "lib/index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./lib/index.js"
+    }
+  },
+  "files": [
+    "lib/**/*",
+    "dist/**/*"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel lib --out-dir dist --out-file-extension '.cjs'",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "logger"
+  ],
+  "author": "Gabriel Quaresma",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.21.0",
+    "@babel/core": "^7.21.4",
+    "@babel/preset-env": "^7.21.4",
+    "babel-plugin-add-module-exports": "^1.0.4"
+  }
+}
