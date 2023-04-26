@@ -4,13 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "prestart": "rimraf storage/live/*",
+    "start": "concurrently -n server,capture -c 'auto' 'npm run start:server' 'npm run start:capture'",
+    "start:server": "node src/index.js",
+    "start:capture": "node src/capture.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
+    "concurrently": "^8.0.1",
+    "express": "^4.18.2",
+    "fluent-ffmpeg": "^2.1.2",
+    "rimraf": "^5.0.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"
