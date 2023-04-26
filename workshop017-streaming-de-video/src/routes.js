@@ -60,7 +60,7 @@ router.get("/stream/:videoName", (req, res) => {
   const end = Math.min(start + 1e6, videoSize);
 
   if (start >= videoSize) {
-    return res.status(416).setHeader("Content-Range", `bytes */${videoSize}`);
+    return res.status(416).setHeader("Content-Range", `bytes */${videoSize}`).end();
   }
 
   res.status(206).set({
