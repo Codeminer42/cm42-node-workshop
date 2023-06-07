@@ -1,0 +1,25 @@
+version: '3.2'
+
+services:
+  node:
+    build: .
+    image: node
+    depends_on:
+      - postgres
+    ports:
+      - 3000:3000
+    environment:
+      - DB_HOST=postgres
+      - DB_PASSWORD=password
+      - DB_USER=realworld
+      - SECRET=secret
+    volumes:
+      - .:/home/node/app
+      - /home/node/app/node_modules
+      - /home/node/app/_coverage
+
+  postgres:
+    image: postgres:15.3
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=realworld

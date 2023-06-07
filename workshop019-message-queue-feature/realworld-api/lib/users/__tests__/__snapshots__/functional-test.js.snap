@@ -1,0 +1,88 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`users GET /api/user when the user is not authenticated should return an unauthorized error 1`] = `
+{
+  "body": {
+    "errors": {
+      "error": {
+        "data": null,
+        "isBoom": true,
+        "isServer": false,
+        "message": "Unauthorized",
+        "output": {
+          "headers": {},
+          "payload": {
+            "error": "Unauthorized",
+            "message": "Unauthorized",
+            "statusCode": 401,
+          },
+          "statusCode": 401,
+        },
+      },
+      "message": "Unauthorized",
+    },
+  },
+  "status": 401,
+}
+`;
+
+exports[`users POST /api/users when the request body is invalid should return an unprocessable entity error 1`] = `
+{
+  "body": {
+    "errors": {
+      "email": [
+        "can't be blank",
+      ],
+      "password": [
+        "can't be blank",
+      ],
+      "username": [
+        "can't be blank",
+      ],
+    },
+  },
+  "status": 422,
+}
+`;
+
+exports[`users POST /api/users/login when the request body is invalid should return an unprocessable entity error 1`] = `
+{
+  "body": {
+    "errors": {
+      "email": [
+        "is invalid",
+      ],
+      "password": [
+        "is invalid",
+      ],
+    },
+  },
+  "status": 422,
+}
+`;
+
+exports[`users PUT /api/user when the user is not authenticated should return an unauthorized error 1`] = `
+{
+  "body": {
+    "errors": {
+      "error": {
+        "data": null,
+        "isBoom": true,
+        "isServer": false,
+        "message": "Unauthorized",
+        "output": {
+          "headers": {},
+          "payload": {
+            "error": "Unauthorized",
+            "message": "Unauthorized",
+            "statusCode": 401,
+          },
+          "statusCode": 401,
+        },
+      },
+      "message": "Unauthorized",
+    },
+  },
+  "status": 401,
+}
+`;
