@@ -1,0 +1,84 @@
+{
+  "name": "express-bookshelf-realworld-example-app",
+  "private": true,
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": "Tane Morgan (https://github.com/tanem)",
+  "description": "RealWorld example app using Express and Bookshelf.",
+  "scripts": {
+    "check:format": "prettier --list-different .",
+    "format": "prettier --write .",
+    "lint": "eslint .",
+    "test": "bin/test.sh",
+    "start": "bin/start.sh",
+    "db:truncate": "bin/truncate.js",
+    "docker:db:truncate": "docker-compose exec node npm run db:truncate",
+    "docker:test": "docker-compose -f docker-compose.yml -f docker-compose.test.yml run node npm run test",
+    "docker:start": "docker-compose -f docker-compose.yml -f docker-compose.development.yml up"
+  },
+  "dependencies": {
+    "@hapi/boom": "10.0.1",
+    "amqplib": "^0.10.3",
+    "async-error-catcher": "1.2.0",
+    "bcrypt": "5.1.0",
+    "body-parser": "1.20.2",
+    "bookshelf": "1.2.0",
+    "bookshelf-virtuals-plugin": "1.0.0",
+    "checkit": "0.7.0",
+    "convict": "6.2.4",
+    "convict-format-with-validator": "6.2.0",
+    "cookie-parser": "1.4.6",
+    "cors": "2.8.5",
+    "express": "4.18.2",
+    "express-interceptor": "1.2.0",
+    "express-pino-logger": "7.0.0",
+    "helmet": "6.0.1",
+    "jsonwebtoken": "9.0.0",
+    "knex": "0.21.21",
+    "lodash": "4.17.21",
+    "passport": "0.6.0",
+    "passport-anonymous": "1.0.1",
+    "passport-jwt": "4.0.1",
+    "passport-local": "1.0.0",
+    "pg": "8.10.0",
+    "pino": "8.11.0",
+    "pino-pretty": "9.4.0",
+    "require-directory": "2.1.1",
+    "serve-favicon": "2.5.0",
+    "slug": "8.2.2",
+    "uuid": "9.0.0"
+  },
+  "devDependencies": {
+    "add-matchers": "0.6.2",
+    "chance": "1.1.11",
+    "coveralls": "3.1.1",
+    "eslint": "8.36.0",
+    "eslint-plugin-jest": "27.2.1",
+    "jest": "29.5.0",
+    "jest-environment-node": "29.5.0",
+    "moment": "2.29.4",
+    "nodemon": "2.0.21",
+    "prettier": "2.8.4",
+    "rimraf": "4.4.0",
+    "supertest": "6.3.3"
+  },
+  "jest": {
+    "coverageDirectory": "<rootDir>/_coverage/",
+    "coveragePathIgnorePatterns": [
+      "<rootDir>/config/"
+    ],
+    "coverageReporters": [
+      "lcov",
+      "text-summary"
+    ],
+    "globalSetup": "<rootDir>/test-support/global-setup.js",
+    "globalTeardown": "<rootDir>/test-support/global-teardown.js",
+    "setupFilesAfterEnv": [
+      "<rootDir>/test-support/setup-test-framework.js"
+    ],
+    "testEnvironment": "<rootDir>/test-support/test-environment.js"
+  },
+  "engines": {
+    "npm": ">=8.0.0"
+  }
+}

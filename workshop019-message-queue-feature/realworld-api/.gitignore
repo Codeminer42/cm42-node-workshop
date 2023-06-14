@@ -1,0 +1,6 @@
+.vscode/
+NOTES.md
+TODO.md
+_coverage/
+config/environments/*.json
+node_modules/

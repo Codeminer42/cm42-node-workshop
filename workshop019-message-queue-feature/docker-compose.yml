@@ -1,0 +1,75 @@
+version: "3.2"
+
+services:
+  realworld-api:
+    build: realworld-api
+    image: node
+    depends_on:
+      postgres:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      - 3000:3000
+    environment:
+      - DB_HOST=postgres
+      - DB_PASSWORD=password
+      - DB_USER=realworld
+      - SECRET=secret
+      - DB_NAME=realworld_development
+      - NODE_ENV=development
+      - QUEUE_URL=amqp://rabbitmq:5672
+      - EVENTS_QUEUE_NAME=realworld-events
+    volumes:
+      - ./realworld-api:/home/node/app
+      - /home/node/app/node_modules
+
+  postgres:
+    image: postgres:15.3
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=realworld
+      - POSTGRES_DB=realworld_development
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    logging:
+      driver: none
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+
+  mailhog:
+    image: mailhog/mailhog
+    logging:
+      driver: none
+    ports:
+      - 8025:8025
+
+  realworld-mailer:
+    build: realworld-mailer
+    depends_on:
+      mailhog:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - QUEUE_URL=amqp://rabbitmq:5672
+      - MAIL_URL=smtp://mailhog:1025
+      - EVENTS_QUEUE_NAME=realworld-events
+    volumes:
+      - ./realworld-mailer:/home/node/app
+      - /home/node/app/node_modules
+
+  redis:
+    image: redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+
+  redis-commander:
+    image: rediscommander/redis-commander
+    environment:
+      - REDIS_HOSTS=local:redis:6379
+    ports:
+      - 8081:8081
