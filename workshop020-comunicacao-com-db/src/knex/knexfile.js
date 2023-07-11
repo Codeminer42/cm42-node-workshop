@@ -1,10 +1,11 @@
-// Update with your config settings.
+const { join } = require('path');
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
 module.exports = {
   development: {
+    debug: true,
     client: 'postgresql',
     connection: {
       database: 'db',
@@ -18,6 +19,7 @@ module.exports = {
     },
     migrations: {
       tableName: 'knex_migrations',
+      directory: join(__dirname, 'migrations')
     },
   },
 };

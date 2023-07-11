@@ -1,4 +1,4 @@
-const knex = require('../knex');
+const knex = require('./knex');
 
 async function run() {
   const name = 'User';
@@ -6,7 +6,7 @@ async function run() {
     .insert({ name })
     .returning('id');
 
-  const content = 'some post content';
+  const content = 'Some post content';
 
   await knex('posts').insert({ content, user_id: insertedUserId });
 
@@ -15,6 +15,8 @@ async function run() {
     .select();
 
   console.log(userPosts);
+
+  knex.destroy();
 }
 
 run();

@@ -1,0 +1,18 @@
+{
+  "name": "workshop020-comunicacao-com-db",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:pg": "node src/pg/index.js",
+    "start:knex": "node src/knex/index.js",
+    "knex:migrate": "knex --knexfile src/knex/knexfile.js --env development migrate:latest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "knex": "^2.4.2",
+    "pg": "^8.11.0"
+  }
+}
