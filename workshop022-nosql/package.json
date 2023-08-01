@@ -1,0 +1,17 @@
+{
+  "name": "workshop022-nosql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "run:mongo-driver": "node src/index.js",
+    "run:mongoose": "node src/mongoose.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mongodb": "^5.7.0",
+    "mongoose": "^7.3.3"
+  }
+}
