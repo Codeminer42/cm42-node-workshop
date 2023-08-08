@@ -5,27 +5,36 @@ import { EntryModel } from '../database/models/EntryModel';
 import { LedgerModel } from '../database/models/LedgerModel';
 import { EntryTypeMap } from '../entries/ObjectionEntryDataMapper';
 import { Money } from '../../domain/Money';
+import { GetLedgerBalanceSnapshot } from './ObjectionGetLedgerBalanceSnapshot';
 
 type ObjectionCurrencyBalance = { currency_symbol: Money.AllowedCurrencies; sum: string };
 type ObjectionCurrenciesBalance = ObjectionCurrencyBalance[];
 
-const makeObjectionBalanceQuery = (): BalanceQuery => async (ledgerName) => {
-  const ledger = await getLedger(ledgerName);
-
-  const objectionCurrenciesBalance = (await ledgerEntries(ledger)
-    .select('currency_symbol')
-    .sum(Model.knex().raw(`CASE WHEN kind = ${EntryTypeMap.in} THEN amount ELSE -amount END`))
-    .groupBy('currency_symbol')
-    .execute()) as unknown as ObjectionCurrenciesBalance;
-
-  return objectionCurrenciesBalance.reduce(
-    (queryResult, currencyBalance) => ({
-      ...queryResult,
-      [currencyBalance.currency_symbol]: Number(currencyBalance.sum),
-    }),
-    {} as Awaited<ReturnType<BalanceQuery>>
-  );
+type Dependencies = {
+  getLedgerBalanceSnapshot: GetLedgerBalanceSnapshot;
 };
+
+const makeObjectionBalanceQuery =
+  ({ getLedgerBalanceSnapshot }: Dependencies): BalanceQuery =>
+  async (ledgerName) => {
+    const ledger = await getLedger(ledgerName);
+
+    const snapshot = await getLedgerBalanceSnapshot(ledger?.id);
+
+    const objectionCurrenciesBalance = (await ledgerEntries(ledger)
+      .select('currency_symbol')
+      .sum(Model.knex().raw(`CASE WHEN kind = ${EntryTypeMap.in} THEN amount ELSE -amount END`))
+      .groupBy('currency_symbol')
+      .execute()) as unknown as ObjectionCurrenciesBalance;
+
+    return objectionCurrenciesBalance.reduce(
+      (queryResult, currencyBalance) => ({
+        ...queryResult,
+        [currencyBalance.currency_symbol]: Number(currencyBalance.sum),
+      }),
+      {} as Awaited<ReturnType<BalanceQuery>>
+    );
+  };
 
 const ledgerEntries = (ledger?: LedgerModel) => {
   if (!ledger) {
