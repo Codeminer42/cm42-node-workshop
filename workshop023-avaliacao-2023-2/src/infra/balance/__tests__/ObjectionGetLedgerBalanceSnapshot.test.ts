@@ -24,8 +24,9 @@ describe('Infra / Balance / GetLedgerBalanceSnapshot', () => {
       it('should return the snapshot with only that entry', async () => {
         const getLedgerBalanceSnapshot = makeObjectionGetLedgerBalanceSnapshot();
 
-        const snapshot = await balanceSnapshotFactory({ balance: { USD: 123 } });
-        const result = await getLedgerBalanceSnapshot(snapshot.ledger_id);
+        const ledger = await ledgerFactory();
+        const snapshot = await balanceSnapshotFactory({ ledger_id: ledger.id, balance: { USD: 123 } });
+        const result = await getLedgerBalanceSnapshot(ledger.id);
 
         expect(result).toEqual({
           createdAt: snapshot.created_at,
@@ -40,8 +41,12 @@ describe('Infra / Balance / GetLedgerBalanceSnapshot', () => {
       it('should return the snapshot with all the entries', async () => {
         const getLedgerBalanceSnapshot = makeObjectionGetLedgerBalanceSnapshot();
 
-        const snapshot = await balanceSnapshotFactory({ balance: { USD: 123, BRL: -456, EUR: 789 } });
-        const result = await getLedgerBalanceSnapshot(snapshot.ledger_id);
+        const ledger = await ledgerFactory();
+        const snapshot = await balanceSnapshotFactory({
+          ledger_id: ledger.id,
+          balance: { USD: 123, BRL: -456, EUR: 789 },
+        });
+        const result = await getLedgerBalanceSnapshot(ledger.id);
 
         expect(result).toEqual({
           createdAt: snapshot.created_at,
@@ -55,19 +60,19 @@ describe('Infra / Balance / GetLedgerBalanceSnapshot', () => {
     });
   });
 
-  // describe('when no ledger id is provided', () => {
-  //   it.skip('should return the general balance snapshot', async () => {
-  //     const getLedgerBalanceSnapshot = makeObjectionGetLedgerBalanceSnapshot();
+  describe('when no ledger id is provided', () => {
+    it('should return the general balance snapshot', async () => {
+      const getLedgerBalanceSnapshot = makeObjectionGetLedgerBalanceSnapshot();
 
-  //     const snapshot = await balanceSnapshotFactory({ ledger_id: null, balance: { USD: 110, BRL: -500, EUR: 300 } });
-  //     const result = getLedgerBalanceSnapshot();
+      const snapshot = await balanceSnapshotFactory({ ledger_id: null, balance: { USD: 110, BRL: -500, EUR: 300 } });
+      const result = await getLedgerBalanceSnapshot();
 
-  //     expect(result).toEqual({
-  //       createdAt: snapshot.created_at,
-  //       balance: { USD: 110, BRL: -500, EUR: 300 },
-  //     });
-  //   });
-  // });
+      expect(result).toEqual({
+        createdAt: snapshot.created_at,
+        balance: { USD: 110, BRL: -500, EUR: 300 },
+      });
+    });
+  });
 
   describe('when the ledger does not have a snapshot', () => {
     it('should return null', async () => {

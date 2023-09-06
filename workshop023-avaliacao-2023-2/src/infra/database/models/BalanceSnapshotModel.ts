@@ -3,7 +3,7 @@ import { BalanceSnapshotEntryModel } from './BalanceSnapshotEntryModel';
 
 export class BalanceSnapshotModel extends Model {
   id!: string;
-  ledger_id!: string;
+  ledger_id!: string | null;
   created_at!: Date;
 
   static tableName = 'balance_snapshots';
