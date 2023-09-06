@@ -1,8 +1,8 @@
 import { Money } from '../domain/Money';
 
-type Balance = {
+type Balance = Partial<{
   [c in Money.AllowedCurrencies]: number;
-};
+}>;
 
 type BalanceQuery = (ledgerName?: string) => Promise<Balance>;
 
