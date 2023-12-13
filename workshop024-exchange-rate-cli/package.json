@@ -1,0 +1,16 @@
+{
+  "name": "workshop024-exchange-rate-cli",
+  "version": "0.0.1",
+  "description": "CLI tool to check the current exchange rate",
+  "scripts": {
+    "exec": "ts-node src/index.ts"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "awilix": "^9.0.0",
+    "axios": "^1.6.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1"
+  }
+}
