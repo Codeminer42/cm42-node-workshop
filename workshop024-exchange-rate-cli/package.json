@@ -8,7 +8,9 @@
   "license": "ISC",
   "dependencies": {
     "awilix": "^9.0.0",
-    "axios": "^1.6.2"
+    "axios": "^1.6.2",
+    "gluegun": "^5.1.6",
+    "ts-results": "^3.3.0"
   },
   "devDependencies": {
     "ts-node": "^10.9.1"
