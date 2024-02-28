@@ -1,0 +1,280 @@
+openapi: 3.0.3
+info:
+  title: Torrente
+  description: |-
+    A torrent client REST API
+  version: 0.0.1
+servers:
+  - url: http://localhost:3000
+tags:
+  - name: torrent
+    description: Torrent manipulation
+paths:
+  /torrents:
+    get:
+      tags:
+        - torrent
+      summary: List all started torrents
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TorrentSummary'
+    post:
+      tags:
+        - torrent
+      summary: Start a new torrent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                magnet_link:
+                  type: string
+                  format: url
+                  example: "magnet:?xt=urn:btih:dd8255ecdc7ca55fb0bbf81323d87062db1f6d1c&dn=Big%20Buck%20Bunny&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F"
+        required: true
+      responses:
+        '201':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Torrent'
+        '409':
+          description: A torrent with the same hash and name already exists
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        format: url
+                        example: "A torrent with the same hash and name already exists"
+        '422':
+          description: Invalid magnet URI
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        format: url
+                        example: "Invalid magnet URI"
+  /torrents/{torrentId}:
+    get:
+      tags:
+        - torrent
+      summary: Retrieve all data about a single torrent
+      parameters:
+        - name: torrentId
+          in: path
+          description: The torrent's ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Torrent'
+        '404':
+          description: Could not find the specified torrent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        format: url
+                        example: "Could not find the specified torrent"
+    delete:
+      tags:
+        - torrent
+      summary: Delete a torrent and all its files
+      parameters:
+        - name: torrentId
+          in: path
+          description: The torrent's ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successful operation
+  /torrents/{torrentId}/pause:
+    get:
+      tags:
+        - torrent
+      summary: Pause a torrent's data transfer
+      parameters:
+        - name: torrentId
+          in: path
+          description: The torrent's ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successful operation
+        '404':
+          description: Could not find the specified torrent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        format: url
+                        example: "Could not find the specified torrent"
+        '409':
+          description: The torrent is already finished downloading
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        format: url
+                        example: "The torrent is already finished downloading"
+  /torrents/{torrentId}/continue:
+    get:
+      tags:
+        - torrent
+      summary: Continue a torrent's data transfer
+      parameters:
+        - name: torrentId
+          in: path
+          description: The torrent's ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successful operation
+        '404':
+          description: Could not find the specified torrent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        format: url
+                        example: "Could not find the specified torrent"
+        '409':
+          description: The torrent is already finished downloading
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        format: url
+                        example: "The torrent is already finished downloading"
+components:
+  schemas:
+    Torrent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 0db55773-e8a1-46bf-aa0e-37bfab4b8d5c
+        hash:
+          type: string
+          description: The torrent's info hash
+          example: dd8255ecdc7ca55fb0bbf81323d87062db1f6d1c
+        name:
+          type: string
+          description: The torrent's name
+          example: "Big Buck Bunny (MP4)"
+        status:
+          type: string
+          description: The torrent's current status
+          example: running
+          enum:
+            - running
+            - paused
+            - finished
+        files:
+          type: array
+          items:
+            $ref: '#/components/schemas/FileData'
+          description: The torrent's files
+        startedAt:
+          type: string
+          description: When the torrent was first started
+          format: date
+          example: "2024-02-28T09:30:00.000Z"
+    FileData:
+      type: object
+      properties:
+        name:
+          type: string
+        isFinished:
+          type: boolean
+    TorrentSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: 0db55773-e8a1-46bf-aa0e-37bfab4b8d5c
+        name:
+          type: string
+          description: The torrent's name
+          example: "Big Buck Bunny (MP4)"
+        status:
+          type: string
+          description: The torrent's current status
+          example: running
+          enum:
+            - running
+            - paused
+            - finished
+        startedAt:
+          type: string
+          description: When the torrent was first started
+          format: date
+          example: "2024-02-28T09:30:00.000Z"
