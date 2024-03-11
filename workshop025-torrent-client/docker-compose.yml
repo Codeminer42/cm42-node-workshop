@@ -1,0 +1,32 @@
+version: "3"
+
+services:
+  app:
+    image: node
+    command: "npm run start:dev"
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=development
+      - HOST=0.0.0.0
+      - PORT=3000
+      - DATABASE_HOST=postgres
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=torrente
+      - POSTGRES_PASSWORD=70rr3n73
+      - POSTGRES_DB=torrente_dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
+      interval: 1s
+      retries: 5
