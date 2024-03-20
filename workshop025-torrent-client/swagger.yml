@@ -16,7 +16,7 @@ paths:
         - torrent
       summary: List all started torrents
       responses:
-        '200':
+        "200":
           description: Successful operation
           content:
             application/json:
@@ -28,7 +28,7 @@ paths:
                   items:
                     type: array
                     items:
-                      $ref: '#/components/schemas/TorrentSummary'
+                      $ref: "#/components/schemas/TorrentSummary"
     post:
       tags:
         - torrent
@@ -45,13 +45,13 @@ paths:
                   example: "magnet:?xt=urn:btih:dd8255ecdc7ca55fb0bbf81323d87062db1f6d1c&dn=Big%20Buck%20Bunny&tr=udp%3A%2F%2Ftracker.leechers-paradise.org%3A6969&tr=udp%3A%2F%2Ftracker.coppersurfer.tk%3A6969&tr=udp%3A%2F%2Ftracker.opentrackr.org%3A1337&tr=udp%3A%2F%2Fexplodie.org%3A6969&tr=udp%3A%2F%2Ftracker.empire-js.us%3A1337&ws=https%3A%2F%2Fwebtorrent.io%2Ftorrents%2F"
         required: true
       responses:
-        '201':
+        "201":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Torrent'
-        '409':
+                $ref: "#/components/schemas/Torrent"
+        "409":
           description: A torrent with the same hash and name already exists
           content:
             application/json:
@@ -65,7 +65,7 @@ paths:
                         type: string
                         format: url
                         example: "A torrent with the same hash and name already exists"
-        '422':
+        "422":
           description: Invalid magnet URI
           content:
             application/json:
@@ -92,13 +92,13 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Torrent'
-        '404':
+                $ref: "#/components/schemas/Torrent"
+        "404":
           description: Could not find the specified torrent
           content:
             application/json:
@@ -124,7 +124,7 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: Successful operation
   /torrents/{torrentId}/pause:
     get:
@@ -139,9 +139,9 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: Successful operation
-        '404':
+        "404":
           description: Could not find the specified torrent
           content:
             application/json:
@@ -155,7 +155,7 @@ paths:
                         type: string
                         format: url
                         example: "Could not find the specified torrent"
-        '409':
+        "409":
           description: The torrent is already finished downloading
           content:
             application/json:
@@ -182,9 +182,9 @@ paths:
           schema:
             type: string
       responses:
-        '204':
+        "204":
           description: Successful operation
-        '404':
+        "404":
           description: Could not find the specified torrent
           content:
             application/json:
@@ -198,7 +198,7 @@ paths:
                         type: string
                         format: url
                         example: "Could not find the specified torrent"
-        '409':
+        "409":
           description: The torrent is already finished downloading
           content:
             application/json:
@@ -219,10 +219,6 @@ components:
       properties:
         id:
           type: string
-          format: uuid
-          example: 0db55773-e8a1-46bf-aa0e-37bfab4b8d5c
-        hash:
-          type: string
           description: The torrent's info hash
           example: dd8255ecdc7ca55fb0bbf81323d87062db1f6d1c
         name:
@@ -234,13 +230,13 @@ components:
           description: The torrent's current status
           example: running
           enum:
-            - running
+            - started
             - paused
             - finished
         files:
           type: array
           items:
-            $ref: '#/components/schemas/FileData'
+            $ref: "#/components/schemas/FileData"
           description: The torrent's files
         startedAt:
           type: string
@@ -250,10 +246,12 @@ components:
     FileData:
       type: object
       properties:
+        id:
+          type: string
+          format: uuid
+          example: 0db55773-e8a1-46bf-aa0e-37bfab4b8d5c
         name:
           type: string
-        isFinished:
-          type: boolean
     TorrentSummary:
       type: object
       properties:
@@ -268,9 +266,9 @@ components:
         status:
           type: string
           description: The torrent's current status
-          example: running
+          example: started
           enum:
-            - running
+            - started
             - paused
             - finished
         startedAt:

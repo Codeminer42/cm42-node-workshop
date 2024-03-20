@@ -1,5 +1,6 @@
 import { database } from "../database/index.js";
 import { httpServer } from "../http/index.js";
+import { p2p } from "../p2p/index.js";
 
 const start = async () => {
   await database.start();
@@ -8,7 +9,8 @@ const start = async () => {
 
 const shutdown = async () => {
   await httpServer.shutdown();
-  await database.start();
+  await database.shutdown();
+  await p2p.shutdown();
 };
 
 export const app = { start, shutdown };

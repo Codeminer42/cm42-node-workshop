@@ -8,6 +8,7 @@ const envSpec = {
   DATABASE_PORT: port({ devDefault: 5432 }),
   DATABASE_USER: str({ devDefault: "torrente" }),
   DATABASE_PASSWORD: str({ devDefault: "70rr3n73" }),
+  TORRENT_STORAGE_PATH: str({ devDefault: "/app/.storage" }),
 };
 
 const env = cleanEnv(process.env, envSpec);
@@ -23,5 +24,8 @@ export const config = {
     port: env.DATABASE_PORT,
     user: env.DATABASE_USER,
     password: env.DATABASE_PASSWORD,
+  },
+  torrent: {
+    storagePath: env.TORRENT_STORAGE_PATH,
   },
 };

@@ -30,3 +30,11 @@ services:
       test: ["CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}"]
       interval: 1s
       retries: 5
+
+  dbeaver:
+    image: dbeaver/cloudbeaver
+    ports:
+      - 8978:8978
+    depends_on:
+      postgres:
+        condition: service_healthy

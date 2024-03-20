@@ -18,14 +18,6 @@ const server = fastify({
   },
 });
 
-server.setNotFoundHandler((req, res) =>
-  res.status(404).send({
-    error: {
-      message: `Route ${req.url} Not Found`,
-    },
-  }),
-);
-
 await server.register(routesPlugin);
 
 export const httpServer = {
