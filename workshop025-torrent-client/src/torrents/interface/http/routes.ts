@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { p2pClient } from "../../../p2p/index.js";
 import { validateRequest } from "../../../http/validateRequest.js";
-import { torrentRepository } from "../../infrastructure/MikroOrmTorrentRepository.js";
+import { mikroOrmTorrentRepository } from "../../infrastructure/MikroOrmTorrentRepository.js";
 import { webTorrentTorrentMapper } from "../../infrastructure/WebTorrentTorrentMapper.js";
 
 // TODO: Validate that this is a magnet link
@@ -23,8 +23,8 @@ export const torrentsRoutesPlugin: FastifyPluginAsync = async (server) => {
 
     const torrent = webTorrentTorrentMapper.toTorrent(webTorrentTorrent);
 
-    await torrentRepository.create(torrent);
+    await mikroOrmTorrentRepository.create(torrent);
 
-    response.send({ success: true });
+    return response.send({ success: true });
   });
 };

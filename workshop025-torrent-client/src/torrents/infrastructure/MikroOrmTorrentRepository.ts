@@ -1,5 +1,5 @@
 import { type TorrentRepository } from "../domain/TorrentRepository.js";
 
-export const torrentRepository: TorrentRepository = {
+export const mikroOrmTorrentRepository: TorrentRepository = {
   create: async (torrent) => {},
 };
