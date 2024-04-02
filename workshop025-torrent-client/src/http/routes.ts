@@ -15,7 +15,7 @@ export const routesPlugin: FastifyPluginAsync = async (app) => {
 
   app.setErrorHandler((error, _, response) => {
     if (error instanceof ZodError)
-      return response.status(404).send({
+      return response.status(422).send({
         error: {
           code: "VALIDATION_ERROR",
           message: "Validation error",
