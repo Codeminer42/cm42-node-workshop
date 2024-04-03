@@ -5,6 +5,7 @@ import { p2pClient } from "../../../p2p/index.js";
 import { validateRequest } from "../../../http/validateRequest.js";
 import { mikroOrmTorrentRepository } from "../../infrastructure/MikroOrmTorrentRepository.js";
 import { webTorrentTorrentMapper } from "../../infrastructure/WebTorrentTorrentMapper.js";
+import { TorrentStatus } from "../../domain/Torrent.js";
 
 // TODO: Validate that this is a magnet link
 const startTorrentSchema = z.object({
@@ -25,6 +26,13 @@ export const torrentsRoutesPlugin: FastifyPluginAsync = async (server) => {
 
     await mikroOrmTorrentRepository.create(torrent);
 
-    return response.send({ success: true });
+    webTorrentTorrent.on("done", () =>
+      mikroOrmTorrentRepository.update({
+        ...torrent,
+        status: TorrentStatus.Finished,
+      })
+    );
+
+    return response.send({ torrent });
   });
 };

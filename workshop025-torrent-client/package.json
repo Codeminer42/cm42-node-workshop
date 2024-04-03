@@ -4,12 +4,15 @@
   "scripts": {
     "start:dev": "nodemon --signal SIGINT --exec tsx src/index.ts | pino-pretty -c",
     "lint:check": "eslint src/**/*.ts",
-    "format:fix": "prettier -w src"
+    "format:fix": "prettier -w src",
+    "db:migrate": "mikro-orm-esm --config src/database/config.ts migration:up"
   },
   "type": "module",
   "license": "ISC",
   "dependencies": {
+    "@mikro-orm/cli": "6.1.12",
     "@mikro-orm/core": "6.1.12",
+    "@mikro-orm/migrations": "6.1.12",
     "@mikro-orm/postgresql": "6.1.12",
     "envalid": "8.0.0",
     "fastify": "4.26.1",
