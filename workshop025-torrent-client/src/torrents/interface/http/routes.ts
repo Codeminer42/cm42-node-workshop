@@ -1,10 +1,8 @@
 import { type FastifyPluginAsync } from "fastify";
 import { z } from "zod";
 
-import { p2pClient } from "../../../p2p/index.js";
 import { validateRequest } from "../../../http/validateRequest.js";
-import { mikroOrmTorrentRepository } from "../../infrastructure/MikroOrmTorrentRepository.js";
-import { webTorrentTorrentMapper } from "../../infrastructure/WebTorrentTorrentMapper.js";
+import { startTorrent } from "../../application/StartTorrent.js";
 
 // TODO: Validate that this is a magnet link
 const startTorrentSchema = z.object({
@@ -19,11 +17,7 @@ export const torrentsRoutesPlugin: FastifyPluginAsync = async (server) => {
       body: { magnetLink },
     } = await validateRequest(request, startTorrentSchema);
 
-    const webTorrentTorrent = await p2pClient.startTorrent(magnetLink);
-
-    const torrent = webTorrentTorrentMapper.toTorrent(webTorrentTorrent);
-
-    await mikroOrmTorrentRepository.create(torrent);
+    const torrent = await startTorrent(magnetLink);
 
     return response.send({ torrent });
   });

@@ -4,7 +4,8 @@
   "scripts": {
     "start:dev": "nodemon --signal SIGINT --exec tsx src/index.ts | pino-pretty -c",
     "lint:check": "eslint src/**/*.ts",
-    "format:fix": "prettier -w src"
+    "format:fix": "prettier -w src",
+    "db:migrate": "mikro-orm-esm --config src/database/config.ts migration:up"
   },
   "type": "module",
   "license": "ISC",
