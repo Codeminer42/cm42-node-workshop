@@ -1,4 +1,8 @@
-import { TorrentAlreadyExistsError, TorrentError } from "../../errors/index.js";
+import {
+  TorrentAlreadyExistsError,
+  TorrentDoesNotExistError,
+  TorrentError,
+} from "../../errors/index.js";
 
 export const TorrentErrorMapper = {
   toHttpResponse: (error: TorrentError) => {
@@ -9,6 +13,18 @@ export const TorrentErrorMapper = {
           error: {
             code: error.code,
             message: "A torrent with the same hash already exists",
+          },
+        },
+      };
+    }
+
+    if (error instanceof TorrentDoesNotExistError) {
+      return {
+        status: 404,
+        body: {
+          error: {
+            code: error.code,
+            message: "The torrent does not exist",
           },
         },
       };

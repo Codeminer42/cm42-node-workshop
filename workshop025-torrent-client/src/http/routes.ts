@@ -23,6 +23,8 @@ export const routesPlugin: FastifyPluginAsync = async (app) => {
         },
       });
 
+    console.error(error);
+
     return response.status(500).send({
       error: {
         code: "INTERNAL_ERROR",

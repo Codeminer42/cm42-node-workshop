@@ -28,4 +28,24 @@ export const mikroOrmTorrentRepository: TorrentRepository = {
 
     return Boolean(torrent);
   },
+
+  findOne: async (torrentId) => {
+    const torrentEntity = await torrentEntityManager.findOne(TorrentEntity, {
+      id: torrentId,
+    });
+
+    if (!torrentEntity) return null;
+
+    return mikroOrmTorrentMapper.toTorrent(torrentEntity);
+  },
+
+  list: async () => {
+    const torrentEntities = await torrentEntityManager.findAll(TorrentEntity, {
+      populate: ["files"],
+    });
+
+    return torrentEntities.map((entity) =>
+      mikroOrmTorrentMapper.toTorrent(entity)
+    );
+  },
 };
