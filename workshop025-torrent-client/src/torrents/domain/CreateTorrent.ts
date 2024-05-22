@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 
-import { type Torrent, TorrentStatus } from "./Torrent.js";
+import { TorrentStatus, StartedTorrent } from "./Torrent.js";
 
 type CreateTorrentProps = {
   id: string;
@@ -8,7 +8,7 @@ type CreateTorrentProps = {
   files: Array<{ name: string }>;
 };
 
-export const createTorrent = (props: CreateTorrentProps): Torrent => ({
+export const createTorrent = (props: CreateTorrentProps): StartedTorrent => ({
   id: props.id,
   name: props.name,
   status: TorrentStatus.Started,
@@ -17,4 +17,5 @@ export const createTorrent = (props: CreateTorrentProps): Torrent => ({
     name: file.name,
   })),
   startedAt: new Date(),
+  finishedAt: null,
 });

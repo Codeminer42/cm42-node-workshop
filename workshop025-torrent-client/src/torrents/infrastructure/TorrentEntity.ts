@@ -26,6 +26,9 @@ export class TorrentEntity extends BaseEntity {
   @Property({ type: "datetime" })
   startedAt: Date;
 
+  @Property({ type: "datetime", nullable: true })
+  finishedAt: Date | null;
+
   @OneToMany({
     entity: "TorrentFileEntity",
     mappedBy: "torrent",
@@ -39,6 +42,7 @@ export class TorrentEntity extends BaseEntity {
     this.name = props.name;
     this.status = props.status;
     this.startedAt = props.startedAt;
+    this.finishedAt = props.finishedAt;
     this.files = new Collection(
       this,
       props.files.map((file) => new TorrentFileEntity(file))

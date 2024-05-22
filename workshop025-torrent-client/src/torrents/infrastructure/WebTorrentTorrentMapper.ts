@@ -1,10 +1,10 @@
 import { type Torrent as WebTorrentTorrent } from "webtorrent";
 
-import { type Torrent } from "../domain/Torrent.js";
 import { createTorrent } from "../domain/CreateTorrent.js";
+import { StartedTorrent } from "../domain/Torrent.js";
 
 export const webTorrentTorrentMapper = {
-  toTorrent: (webTorrentTorrent: WebTorrentTorrent): Torrent => {
+  toTorrent: (webTorrentTorrent: WebTorrentTorrent): StartedTorrent => {
     const mappedTorrent = createTorrent({
       id: webTorrentTorrent.infoHash,
       name: webTorrentTorrent.name,

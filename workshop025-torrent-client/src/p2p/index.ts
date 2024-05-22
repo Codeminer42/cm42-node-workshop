@@ -8,6 +8,12 @@ const webTorrentClient = new WebTorrent();
 
 export const p2pClient = {
   startTorrent: async (magnetLink: string) => {
+    const existingTorrent = webTorrentClient.torrents.find(
+      (torrent) => torrent.magnetURI === magnetLink
+    );
+
+    if (existingTorrent) return existingTorrent;
+
     const torrent = await new Promise<Torrent>((resolve) =>
       webTorrentClient.add(
         magnetLink,

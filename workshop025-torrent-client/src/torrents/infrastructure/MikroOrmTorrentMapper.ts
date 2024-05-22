@@ -8,6 +8,7 @@ export const mikroOrmTorrentMapper = {
       name: torrent.name,
       status: torrent.status,
       startedAt: torrent.startedAt,
+      finishedAt: torrent.finishedAt,
       files: torrent.files.map((file) => ({
         id: file.id,
         name: file.name,

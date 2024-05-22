@@ -3,6 +3,8 @@ import { z } from "zod";
 
 import { validateRequest } from "../../../http/validateRequest.js";
 import { startTorrent } from "../../application/StartTorrent.js";
+import { TorrentError } from "../../errors/index.js";
+import { TorrentErrorMapper } from "./TorrentErrorMapper.js";
 
 // TODO: Validate that this is a magnet link
 const startTorrentSchema = z.object({
@@ -19,6 +21,16 @@ export const torrentsRoutesPlugin: FastifyPluginAsync = async (server) => {
 
     const torrent = await startTorrent(magnetLink);
 
-    return response.send({ torrent });
+    response.status(201).send({ torrent });
+  });
+
+  server.setErrorHandler((error, _, response) => {
+    if (error instanceof TorrentError) {
+      const { status, body } = TorrentErrorMapper.toHttpResponse(error);
+
+      return response.status(status).send(body);
+    }
+
+    throw error;
   });
 };

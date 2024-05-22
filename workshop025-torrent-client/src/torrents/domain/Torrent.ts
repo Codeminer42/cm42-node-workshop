@@ -9,10 +9,26 @@ export type TorrentFile = {
   name: string;
 };
 
-export type Torrent = {
+export type BaseTorrent = {
   id: string;
   name: string;
-  status: TorrentStatus;
   files: Array<TorrentFile>;
   startedAt: Date;
 };
+
+export type StartedTorrent = BaseTorrent & {
+  status: TorrentStatus.Started;
+  finishedAt: null;
+};
+
+export type PausedTorrent = BaseTorrent & {
+  status: TorrentStatus.Paused;
+  finishedAt: null;
+};
+
+export type FinishedTorrent = BaseTorrent & {
+  status: TorrentStatus.Finished;
+  finishedAt: Date;
+};
+
+export type Torrent = StartedTorrent | PausedTorrent | FinishedTorrent;
