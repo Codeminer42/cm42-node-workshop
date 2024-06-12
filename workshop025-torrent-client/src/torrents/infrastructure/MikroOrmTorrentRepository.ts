@@ -48,4 +48,13 @@ export const mikroOrmTorrentRepository: TorrentRepository = {
       mikroOrmTorrentMapper.toTorrent(entity)
     );
   },
+
+  deleteById: async (id) => {
+    const torrentReference = torrentEntityManager.getReference(
+      TorrentEntity,
+      id
+    );
+
+    await torrentEntityManager.removeAndFlush(torrentReference);
+  },
 };

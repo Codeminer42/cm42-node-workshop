@@ -6,4 +6,5 @@ export type TorrentRepository = {
   existsById: (torrentId: Torrent["id"]) => Promise<boolean>;
   findOne: (torrentId: Torrent["id"]) => Promise<Torrent | null>;
   list: () => Promise<Array<Torrent>>;
+  deleteById: (torrentId: Torrent["id"]) => Promise<void>;
 };

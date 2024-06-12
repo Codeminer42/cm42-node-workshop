@@ -7,6 +7,7 @@ import { TorrentError } from "../../errors/index.js";
 import { TorrentErrorMapper } from "./TorrentErrorMapper.js";
 import { getTorrentDetailsById } from "../../application/GetTorrentDetailsById.js";
 import { listTorrentsQuery } from "../../queries/ListTorrents.js";
+import { deleteTorrentById } from "../../application/DeleteTorrentById.js";
 
 // TODO: Validate that this is a magnet link
 const startTorrentSchema = z.object({
@@ -16,6 +17,12 @@ const startTorrentSchema = z.object({
 });
 
 const getTorrentDetailsSchema = z.object({
+  params: z.object({
+    id: z.string(),
+  }),
+});
+
+const deleteTorrentSchema = z.object({
   params: z.object({
     id: z.string(),
   }),
@@ -46,6 +53,16 @@ export const torrentsRoutesPlugin: FastifyPluginAsync = async (server) => {
     const torrent = await getTorrentDetailsById(id);
 
     response.send({ torrent });
+  });
+
+  server.delete("/:id", async (request, response) => {
+    const {
+      params: { id },
+    } = await validateRequest(request, deleteTorrentSchema);
+
+    await deleteTorrentById(id);
+
+    response.status(204).send();
   });
 
   server.setErrorHandler((error, _, response) => {

@@ -24,6 +24,21 @@ export const p2pClient = {
 
     return torrent;
   },
+
+  deleteTorrentByHash: async (hash: string) => {
+    const torrent = webTorrentClient.torrents.find(
+      (torrent) => torrent.infoHash === hash
+    );
+
+    if (!torrent) throw new Error("Torrent does not exist in P2P client");
+
+    return new Promise<void>((resolve, reject) => {
+      torrent.destroy({ destroyStore: true }, (error) => {
+        if (error) reject(error);
+        else resolve();
+      });
+    });
+  },
 };
 
 export const p2p = {
