@@ -1,8 +1,13 @@
+import { p2pClient } from "../../p2p/index.js";
 import { Torrent } from "../domain/Torrent.js";
 import { mikroOrmTorrentRepository } from "../infrastructure/MikroOrmTorrentRepository.js";
 
 export type ListTorrentsQuery = () => Promise<
-  Array<Pick<Torrent, "id" | "name" | "status" | "startedAt">>
+  Array<
+    Pick<Torrent, "id" | "name" | "status" | "startedAt"> & {
+      progress: number;
+    }
+  >
 >;
 
 export const listTorrentsQuery: ListTorrentsQuery = async () => {
@@ -13,5 +18,6 @@ export const listTorrentsQuery: ListTorrentsQuery = async () => {
     name: torrent.name,
     status: torrent.status,
     startedAt: torrent.startedAt,
+    progress: p2pClient.getTorrentProgressByHash(torrent.id),
   }));
 };

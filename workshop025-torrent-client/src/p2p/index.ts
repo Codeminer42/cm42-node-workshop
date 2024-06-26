@@ -57,6 +57,12 @@ export const p2pClient = {
 
     torrent.resume();
   },
+
+  getTorrentProgressByHash: (hash: string) => {
+    const torrent = findTorrentByHashOrFail(hash);
+
+    return torrent.progress;
+  },
 };
 
 export const p2p = {

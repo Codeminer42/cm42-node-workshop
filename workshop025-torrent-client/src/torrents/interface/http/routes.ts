@@ -53,10 +53,18 @@ export const torrentsRoutesPlugin: FastifyPluginAsync = async (server) => {
     response.status(201).send({ torrent });
   });
 
-  server.get("/", async (request, response) => {
+  const serializeProgress = (progress: number) =>
+    (progress * 100).toFixed(2).concat("%");
+
+  server.get("/", async (_, response) => {
     const torrents = await listTorrentsQuery();
 
-    response.send({ count: torrents.length, torrents });
+    const serializedTorrents = torrents.map((torrent) => ({
+      ...torrent,
+      progress: serializeProgress(torrent.progress),
+    }));
+
+    response.send({ count: torrents.length, torrents: serializedTorrents });
   });
 
   server.get("/:id", async (request, response) => {
@@ -64,9 +72,14 @@ export const torrentsRoutesPlugin: FastifyPluginAsync = async (server) => {
       params: { id },
     } = await validateRequest(request, getTorrentDetailsSchema);
 
-    const torrent = await getTorrentDetailsById(id);
+    const torrentDetails = await getTorrentDetailsById(id);
 
-    response.send({ torrent });
+    response.send({
+      torrent: {
+        ...torrentDetails,
+        progress: serializeProgress(torrentDetails.progress),
+      },
+    });
   });
 
   server.delete("/:id", async (request, response) => {
