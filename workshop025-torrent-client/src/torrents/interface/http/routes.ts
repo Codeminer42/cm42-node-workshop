@@ -8,6 +8,8 @@ import { TorrentErrorMapper } from "./TorrentErrorMapper.js";
 import { getTorrentDetailsById } from "../../application/GetTorrentDetailsById.js";
 import { listTorrentsQuery } from "../../queries/ListTorrents.js";
 import { deleteTorrentById } from "../../application/DeleteTorrentById.js";
+import { pauseTorrentById } from "../../application/PauseTorrentById.js";
+import { resumeTorrentById } from "../../application/ResumeTorrentById.js";
 
 // TODO: Validate that this is a magnet link
 const startTorrentSchema = z.object({
@@ -23,6 +25,18 @@ const getTorrentDetailsSchema = z.object({
 });
 
 const deleteTorrentSchema = z.object({
+  params: z.object({
+    id: z.string(),
+  }),
+});
+
+const pauseTorrentSchema = z.object({
+  params: z.object({
+    id: z.string(),
+  }),
+});
+
+const continueTorrentSchema = z.object({
   params: z.object({
     id: z.string(),
   }),
@@ -61,6 +75,26 @@ export const torrentsRoutesPlugin: FastifyPluginAsync = async (server) => {
     } = await validateRequest(request, deleteTorrentSchema);
 
     await deleteTorrentById(id);
+
+    response.status(204).send();
+  });
+
+  server.post("/:id/pause", async (request, response) => {
+    const {
+      params: { id },
+    } = await validateRequest(request, pauseTorrentSchema);
+
+    await pauseTorrentById(id);
+
+    response.status(204).send();
+  });
+
+  server.post("/:id/resume", async (request, response) => {
+    const {
+      params: { id },
+    } = await validateRequest(request, continueTorrentSchema);
+
+    await resumeTorrentById(id);
 
     response.status(204).send();
   });

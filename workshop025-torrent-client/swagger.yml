@@ -127,7 +127,7 @@ paths:
         "204":
           description: Successful operation
   /torrents/{torrentId}/pause:
-    get:
+    post:
       tags:
         - torrent
       summary: Pause a torrent's data transfer
@@ -169,11 +169,11 @@ paths:
                         type: string
                         format: url
                         example: "The torrent is already finished downloading"
-  /torrents/{torrentId}/continue:
-    get:
+  /torrents/{torrentId}/resume:
+    post:
       tags:
         - torrent
-      summary: Continue a torrent's data transfer
+      summary: Resumes a torrent's data transfer
       parameters:
         - name: torrentId
           in: path

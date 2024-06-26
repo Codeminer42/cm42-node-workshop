@@ -6,6 +6,16 @@ import { config } from "../config/index.js";
 
 const webTorrentClient = new WebTorrent();
 
+const findTorrentByHashOrFail = (hash: string) => {
+  const torrent = webTorrentClient.torrents.find(
+    (torrent) => torrent.infoHash === hash
+  );
+
+  if (!torrent) throw new Error("Torrent does not exist in P2P client");
+
+  return torrent;
+};
+
 export const p2pClient = {
   startTorrent: async (magnetLink: string) => {
     const existingTorrent = webTorrentClient.torrents.find(
@@ -26,11 +36,7 @@ export const p2pClient = {
   },
 
   deleteTorrentByHash: async (hash: string) => {
-    const torrent = webTorrentClient.torrents.find(
-      (torrent) => torrent.infoHash === hash
-    );
-
-    if (!torrent) throw new Error("Torrent does not exist in P2P client");
+    const torrent = findTorrentByHashOrFail(hash);
 
     return new Promise<void>((resolve, reject) => {
       torrent.destroy({ destroyStore: true }, (error) => {
@@ -38,6 +44,18 @@ export const p2pClient = {
         else resolve();
       });
     });
+  },
+
+  pauseTorrentByHash: (hash: string) => {
+    const torrent = findTorrentByHashOrFail(hash);
+
+    torrent.pause();
+  },
+
+  resumeTorrentByHash: (hash: string) => {
+    const torrent = findTorrentByHashOrFail(hash);
+
+    torrent.resume();
   },
 };
 
